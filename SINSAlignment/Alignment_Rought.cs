@@ -49,6 +49,16 @@ namespace Alignment
             Alignment_avg_rougth.WriteLine("count f_1 f_2 f_3 w_1 w_2 w_3 heading roll pitch Latitude");
             Alignment_avg_rougthMovingAVG.WriteLine("count MA_f_1 MA_f_2 MA_f_3 MA_w_1 MA_w_2 MA_w_3");
 
+            while (true)
+            {
+                i++;
+                if (i < ProcHelp.AlignmentStartTime)
+                    myFile.ReadLine();
+                else
+                    break;
+            }
+            i = 0;
+
 
             while (true)
             {
@@ -173,7 +183,7 @@ namespace Alignment
                     Alignment_avg_rougth.WriteLine(SINSstate.Count.ToString()
                         + " " + (f_avg[0] / k_f).ToString() + " " + (f_avg[1] / k_f).ToString() + " " + (f_avg[2] / k_f).ToString()
                         + " " + (w_avg[0] / k_nu).ToString() + " " + (w_avg[1] / k_nu).ToString() + " " + (w_avg[2] / k_nu).ToString()
-                        + " " + (Heading * SimpleData.ToDegree).ToString() + " " + (Roll * SimpleData.ToDegree).ToString() 
+                        + " " + (Heading * SimpleData.ToDegree).ToString() + " " + (Roll * SimpleData.ToDegree).ToString()
                         + " " + (Pitch * SimpleData.ToDegree).ToString() + " " + Latitude.ToString()
                         + " " + (w_avg_x[0] / k_nu).ToString() + " " + (w_avg_x[1] / k_nu).ToString() + " " + (w_avg_x[2] / k_nu).ToString()
                         );
@@ -223,23 +233,24 @@ namespace Alignment
             // --- вычисляем СКО датчиков
             for (int j = 1; j < k_f; j++)
             {
-                sigma_f[0] += Math.Pow((array_sigma_f_1[j] - f_avg[0]), 2);
-                sigma_f[1] += Math.Pow((array_sigma_f_2[j] - f_avg[1]), 2);
-                sigma_f[2] += Math.Pow((array_sigma_f_3[j] - f_avg[2]), 2);
+                sigma_f[0] += Math.Abs(array_sigma_f_1[j] - f_avg[0]);
+                sigma_f[1] += Math.Abs(array_sigma_f_2[j] - f_avg[1]);
+                sigma_f[2] += Math.Abs(array_sigma_f_3[j] - f_avg[2]);
             }
-            sigma_f[0] = Math.Sqrt(sigma_f[0] / k_f);
-            sigma_f[1] = Math.Sqrt(sigma_f[1] / k_f);
-            sigma_f[2] = Math.Sqrt(sigma_f[2] / k_f);
+            sigma_f[0] = sigma_f[0] / k_f;
+            sigma_f[1] = sigma_f[1] / k_f;
+            sigma_f[2] = sigma_f[2] / k_f;
+
 
             for (int j = 1; j < k_nu; j++)
             {
-                sigma_w[0] += Math.Pow((array_sigma_w_1[j] - w_avg[0]), 2);
-                sigma_w[1] += Math.Pow((array_sigma_w_2[j] - w_avg[1]), 2);
-                sigma_w[2] += Math.Pow((array_sigma_w_3[j] - w_avg[2]), 2);
+                sigma_w[0] += Math.Abs(array_sigma_w_1[j] - w_avg[0]);
+                sigma_w[1] += Math.Abs(array_sigma_w_2[j] - w_avg[1]);
+                sigma_w[2] += Math.Abs(array_sigma_w_3[j] - w_avg[2]);
             }
-            sigma_w[0] = Math.Sqrt(sigma_w[0] / k_nu);
-            sigma_w[1] = Math.Sqrt(sigma_w[1] / k_nu);
-            sigma_w[2] = Math.Sqrt(sigma_w[2] / k_nu);
+            sigma_w[0] = sigma_w[0] / k_nu;
+            sigma_w[1] = sigma_w[1] / k_nu;
+            sigma_w[2] = sigma_w[2] / k_nu;
 
 
             // --- вычисляются шумы ньютонометров и дусов --- //
@@ -250,8 +261,8 @@ namespace Alignment
             }
 
             // === По вертикальному шум обычно будет меньше на выставке, поэтому немного сглаживаем  === //
-            KalmanVars.Noise_Vel[2] = (KalmanVars.Noise_Vel[0] + KalmanVars.Noise_Vel[1]) / 2.0;
-            KalmanVars.Noise_Angl[2] = (KalmanVars.Noise_Angl[0] + KalmanVars.Noise_Angl[1]) / 2.0;
+            //KalmanVars.Noise_Vel[2] = (KalmanVars.Noise_Vel[0] + KalmanVars.Noise_Vel[1]) / 2.0;
+            //KalmanVars.Noise_Angl[2] = (KalmanVars.Noise_Angl[0] + KalmanVars.Noise_Angl[1]) / 2.0;
 
 
             SINSstate.Pitch = Math.Atan2(f_avg[1], Math.Sqrt(f_avg[0] * f_avg[0] + f_avg[2] * f_avg[2]));

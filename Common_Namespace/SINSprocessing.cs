@@ -304,7 +304,8 @@ namespace Common_Namespace
             double sqrt_freq_vert = Math.Sqrt(Math.Abs(SINSstate.Freq));
             double sqrt_freq = Math.Sqrt(Math.Abs(SINSstate.Freq));
 
-            //sqrt_freq = sqrt_freq_vert = 1.0;
+            sqrt_freq = 1.0;
+            //sqrt_freq_vert = 1.0;
 
             double[] Noise_Vel_in_Mx = new double[3], Noise_Angl_in_Mx = new double[3];
 
@@ -321,9 +322,6 @@ namespace Common_Namespace
                 Noise_Angl_in_Mx[j] = Math.Sqrt(Math.Pow(SINSstate.A_x0s[j, 0] * KalmanVars.Noise_Angl[0], 2) +
                                                Math.Pow(SINSstate.A_x0s[j, 1] * KalmanVars.Noise_Angl[1], 2) +
                                                Math.Pow(SINSstate.A_x0s[j, 2] * KalmanVars.Noise_Angl[2], 2));
-
-                //Noise_Vel_in_Mx[j] *= 0.1;
-                //Noise_Angl_in_Mx[j] *= 0.1;
             }
 
             // --- шумы по горизонтальному каналу БИНС
@@ -332,9 +330,9 @@ namespace Common_Namespace
 
             // --- Проставляются параметры шумов датчиков в матриц Q //
             KalmanVars.CovarianceMatrixNoise[(iMx_dV_12 + 0) * iMq + iMx_dV_12 + 0] = Noise_Vel_in_Mx[0] * sqrt_freq;
-            KalmanVars.CovarianceMatrixNoise[(iMx_dV_12 + 0) * iMq + iMx_alphaBeta + 0] = SINSstate.Vx_0[1] * Noise_Angl_in_Mx[0] * sqrt_freq;
+            //KalmanVars.CovarianceMatrixNoise[(iMx_dV_12 + 0) * iMq + iMx_alphaBeta + 0] = SINSstate.Vx_0[1] * Noise_Angl_in_Mx[0] * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_dV_12 + 1) * iMq + iMx_dV_12 + 1] = Noise_Vel_in_Mx[1] * sqrt_freq;
-            KalmanVars.CovarianceMatrixNoise[(iMx_dV_12 + 1) * iMq + iMx_alphaBeta + 1] = SINSstate.Vx_0[0] * Noise_Angl_in_Mx[1] * sqrt_freq;
+            //KalmanVars.CovarianceMatrixNoise[(iMx_dV_12 + 1) * iMq + iMx_alphaBeta + 1] = SINSstate.Vx_0[0] * Noise_Angl_in_Mx[1] * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 0) * iMq + iMx_alphaBeta + 0] = Noise_Angl_in_Mx[0] * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 1) * iMq + iMx_alphaBeta + 1] = Noise_Angl_in_Mx[1] * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 2) * iMq + iMx_alphaBeta + 2] = Noise_Angl_in_Mx[2] * sqrt_freq;
@@ -350,7 +348,7 @@ namespace Common_Namespace
             SimpleOperations.NullingOfArray(KalmanVars.Vertical_CovarianceMatrixNoise);
 
             KalmanVars.Vertical_CovarianceMatrixNoise[0 * SimpleData.iMq_Vertical + 0] = KalmanVars.Noise_Pos_Vertical * sqrt_freq_vert;
-            KalmanVars.Vertical_CovarianceMatrixNoise[1 * SimpleData.iMq_Vertical + 1] = Noise_Vel_in_Mx[2] * sqrt_freq_vert * 1.0;
+            KalmanVars.Vertical_CovarianceMatrixNoise[1 * SimpleData.iMq_Vertical + 1] = Noise_Vel_in_Mx[2] * sqrt_freq_vert;
             KalmanVars.Vertical_CovarianceMatrixNoise[SINSstate.Vertical_rOdo3 * SimpleData.iMq_Vertical + SINSstate.Vertical_rOdo3] = KalmanVars.Noise_Pos_Vertical * sqrt_freq_vert;
         }
 
@@ -620,8 +618,10 @@ namespace Common_Namespace
 
             if (SimpleOperations.AbsoluteVectorValue(Vx_0) > 0.1)
             {
-                double[] Vs = new double[3];
-                SimpleOperations.CopyArray(Vs, SINSstate.A_sx0 * Vx_0);
+                double[] Vs = new double[3], Vx0 = new double[3];
+                Vx0[0] = Vx_0[0];
+                Vx0[1] = Vx_0[1];
+                SimpleOperations.CopyArray(Vs, SINSstate.A_sx0 * Vx0);
                 SINSstate.distance_by_SINS += Vs[1] * SINSstate.timeStep;
             }
 

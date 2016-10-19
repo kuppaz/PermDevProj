@@ -19,6 +19,7 @@ namespace Common_Namespace
         public double Value_prev;
         public int isReady;
         public int isReady_orig;
+        public double Value_Correction;
     }
 
     [Serializable()]
@@ -229,6 +230,7 @@ namespace Common_Namespace
         public int OdometerData_Sign = 1;
         public double OdometerData_RoughtScale = 1.0;
         public int OdometerData_RoughtScale_flag = 0;
+        public int firstNotNullOdoValue_flg;
     }
 
 
@@ -376,7 +378,7 @@ namespace Common_Namespace
 
         public double LatSNS, LongSNS, AltSNS, SpeedSNS, Ve_SNS, Vn_SNS;
 
-        public int corrected = 0, AlignmentCounts = 0;
+        public int corrected = 0, AlignmentCounts = 0, AlignmentStartTime = 0;
     }
 }
 

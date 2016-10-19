@@ -142,9 +142,9 @@ namespace Common_Namespace
                 }
 
                 // --- Считываем показания одометров
-                SINSstate.OdometerData.odometer_left.Value = Convert.ToDouble(dataArray2[18]) * SINSstate.OdometerData_Sign / SINSstate.OdometerData_RoughtScale;
+                SINSstate.OdometerData.odometer_left.Value = (Convert.ToDouble(dataArray2[18]) - SINSstate.OdometerData.odometer_left.Value_Correction) * SINSstate.OdometerData_Sign / SINSstate.OdometerData_RoughtScale;
                 SINSstate.OdometerData.odometer_left.isReady = Convert.ToInt32(dataArray2[19]);
-                SINSstate.OdometerData.odometer_right.Value = Convert.ToDouble(dataArray2[20]) * SINSstate.OdometerData_Sign / SINSstate.OdometerData_RoughtScale;
+                SINSstate.OdometerData.odometer_right.Value = (Convert.ToDouble(dataArray2[20]) - SINSstate.OdometerData.odometer_left.Value_Correction) * SINSstate.OdometerData_Sign / SINSstate.OdometerData_RoughtScale;
                 SINSstate.OdometerData.odometer_right.isReady = Convert.ToInt32(dataArray2[21]);
 
                 SINSstate.Input_nMode = Convert.ToInt32(dataArray2[22]);
@@ -152,6 +152,17 @@ namespace Common_Namespace
 
                 if (SINSstate.OdometerData.odometer_left.isReady == 1)
                 {
+                    // Проверка на случай, когда одометр начинает имзерять растояние не с нуля
+                    if (SINSstate.firstNotNullOdoValue_flg == 0 && SINSstate.OdometerData.odometer_left.isReady == 1)
+                    {
+                        SINSstate.firstNotNullOdoValue_flg = 1;
+                        if (SINSstate.OdometerData.odometer_left.Value > 1.0)
+                        {
+                            SINSstate.OdometerData.odometer_left.Value_Correction = SINSstate.OdometerData.odometer_left.Value;
+                            SINSstate.OdometerData.odometer_left.Value -= SINSstate.OdometerData.odometer_left.Value_Correction;
+                        }
+                    }
+
                     SINSstate.OdometerData.odometer_left.Value_prev = SINSstate.OdometerData.odometer_left.Value;
 
                     SINSstate.OdoLimitMeasuresNum_Count++;

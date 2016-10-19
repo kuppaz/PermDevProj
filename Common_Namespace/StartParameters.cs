@@ -27,7 +27,7 @@ namespace Common_Namespace
         {
             StreamReader configFile = new StreamReader(SimpleData.ConfigurationFileIn);
 
-            string frequency = "", StartLatitude = "", StartLongitude = "", StartHeight = "", AlignmentDuration = "", StartCov_Kappa1 = "", StartCov_Kappa3 = ""
+            string frequency = "", StartLatitude = "", StartLongitude = "", StartHeight = "", AlignmentStartTime = "", AlignmentDuration = "", StartCov_Kappa1 = "", StartCov_Kappa3 = ""
                 , StartHeightCorrection_value = "0", StartHeightCorrection_flag = "0"
                 , alpha_kappa_1 = "0"
                 , alpha_kappa_3 = "0"
@@ -67,6 +67,8 @@ namespace Common_Namespace
                     if (tmpstr[0] == "StartHeight")
                         StartHeight = tmpstr[1];
 
+                    if (tmpstr[0] == "AlignmentStartTime")
+                        AlignmentStartTime = tmpstr[1];
                     if (tmpstr[0] == "AlignmentDuration")
                         AlignmentDuration = tmpstr[1];
 
@@ -120,7 +122,8 @@ namespace Common_Namespace
             SINSstate.OdoLimitMeasuresNum = 5;
 
             // --- Количество тактов БИНС для начальной выставки от начала  --- //
-            ProcHelp.AlignmentCounts = Convert.ToInt32(Math.Round(Convert.ToDouble(AlignmentDuration) / SINSstate.Freq));
+            ProcHelp.AlignmentStartTime = Convert.ToInt32(Math.Round(Convert.ToDouble(AlignmentStartTime) / SINSstate.Freq));
+            ProcHelp.AlignmentCounts = Convert.ToInt32(Math.Round(Convert.ToDouble(AlignmentDuration) / SINSstate.Freq)) - ProcHelp.AlignmentStartTime;
 
             // --- Заданные значения начальных углов ориентации: флаги и значения --- //
             if (Convert.ToInt32(Alignment_HeadingDetermined) == 1)
@@ -159,15 +162,15 @@ namespace Common_Namespace
 
 
             // --- Шум по горизонтальным ошибкам координат --- //
-            KalmanVars.Noise_Pos = 1.0;
+            KalmanVars.Noise_Pos = 0.1;
             // --- Шум по вертикальным ошибкам координат --- //
             KalmanVars.Noise_Pos_Vertical = 0.01;
             // -------------------------------------------//
 
             // --- Начальные ковариации --- //
-            SINSstate.stdR = 0.1; // по ошибке координат БИНС, м
-            SINSstate.stdOdoR = 0.1; // по ошибке координат одометрического счисления, м
-            SINSstate.stdV = 1.0;
+            SINSstate.stdR = 0.01; // по ошибке координат БИНС, м
+            SINSstate.stdOdoR = 0.01; // по ошибке координат одометрического счисления, м
+            SINSstate.stdV = 0.1;
 
             // --- По флагу Точно ли установлен БИНС на корпусе объекта, определяем соответствующие начальные значения ковариаций
             if (Convert.ToInt32(SINS_is_accurateMounted_by_kappa_1) == 1)
@@ -193,7 +196,7 @@ namespace Common_Namespace
 
 
             // --- определяем мультипликатор для шума вертикального измерения по одометру
-            SINSstate.OdoVerticalNoiseMultiplicator = 5;
+            SINSstate.OdoVerticalNoiseMultiplicator = 1;
 
 
             //--- В случае выставления значения поправки на угол kappa_3 именшаем нач.ковариацию ---//
