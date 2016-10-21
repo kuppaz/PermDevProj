@@ -35,12 +35,12 @@ namespace Alignment
             // --- вспомогательные массивы для определения сигмы шумов
             // --- array_&_i - полный массив показаний датчиков;
             // --- array_sigma_&_i - частичный массив показаний датчиков, не включающий в себя интервалы, где вместо показаний датчиков константа;
-            double[] array_f_1 = new double[100000], array_sigma_f_1 = new double[100000];
-            double[] array_f_2 = new double[100000], array_sigma_f_2 = new double[100000];
-            double[] array_f_3 = new double[100000], array_sigma_f_3 = new double[100000];
-            double[] array_w_1 = new double[100000], array_sigma_w_1 = new double[100000];
-            double[] array_w_2 = new double[100000], array_sigma_w_2 = new double[100000];
-            double[] array_w_3 = new double[100000], array_sigma_w_3 = new double[100000];
+            double[] array_f_1 = new double[200000], array_sigma_f_1 = new double[200000];
+            double[] array_f_2 = new double[200000], array_sigma_f_2 = new double[200000];
+            double[] array_f_3 = new double[200000], array_sigma_f_3 = new double[200000];
+            double[] array_w_1 = new double[200000], array_sigma_w_1 = new double[200000];
+            double[] array_w_2 = new double[200000], array_sigma_w_2 = new double[200000];
+            double[] array_w_3 = new double[200000], array_sigma_w_3 = new double[200000];
 
             // --- вектора СКО
             double[] sigma_f = new double[3];
@@ -48,16 +48,6 @@ namespace Alignment
 
             Alignment_avg_rougth.WriteLine("count f_1 f_2 f_3 w_1 w_2 w_3 heading roll pitch Latitude");
             Alignment_avg_rougthMovingAVG.WriteLine("count MA_f_1 MA_f_2 MA_f_3 MA_w_1 MA_w_2 MA_w_3");
-
-            while (true)
-            {
-                i++;
-                if (i < ProcHelp.AlignmentStartTime)
-                    myFile.ReadLine();
-                else
-                    break;
-            }
-            i = 0;
 
 
             while (true)
@@ -111,35 +101,41 @@ namespace Alignment
                     array_sigma_f_1_tmp_sum += array_f_1[i - u];
                 array_sigma_f_1_tmp_sum /= (u - 1);
 
-                // --- Если показания датчиков меняются, то заполняем соответствующие массивы
-                if (Math.Abs(array_sigma_f_1_tmp_sum - array_f_1[i]) > 1E-9)
-                {
-                    array_sigma_f_1[k_f] = SINSstate.F_z[0];
-                    array_sigma_f_2[k_f] = SINSstate.F_z[1];
-                    array_sigma_f_3[k_f] = SINSstate.F_z[2];
-                    f_avg[0] += SINSstate.F_z[0];
-                    f_avg[1] += SINSstate.F_z[1];
-                    f_avg[2] += SINSstate.F_z[2];
-                    k_f++;
-                }
-
                 // --- Вычисляем среднее значение показаний ДУСов
                 u = 0;
                 for (u = 1; u <= Math.Min(i, 50); u++)
                     array_sigma_w_1_tmp_sum += array_w_1[i - u];
                 array_sigma_w_1_tmp_sum /= (u - 1);
 
+
                 // --- Если показания датчиков меняются, то заполняем соответствующие массивы
-                if (Math.Abs(array_sigma_w_1_tmp_sum - array_w_1[i]) > 1E-9)
+                if (SINSstate.NoiseParamDetermin_mode != 1 || SINSstate.NoiseParamDetermin_mode == 1 && SINSstate.Count > SINSstate.NoiseParamDetermin_startTime && SINSstate.Count < SINSstate.NoiseParamDetermin_endTime)
                 {
-                    array_sigma_w_1[k_nu] = SINSstate.W_z[0];
-                    array_sigma_w_2[k_nu] = SINSstate.W_z[1];
-                    array_sigma_w_3[k_nu] = SINSstate.W_z[2];
-                    w_avg[0] += SINSstate.W_z[0];
-                    w_avg[1] += SINSstate.W_z[1];
-                    w_avg[2] += SINSstate.W_z[2];
-                    k_nu++;
+                    if (Math.Abs(array_sigma_f_1_tmp_sum - array_f_1[i]) > 1E-9)
+                    {
+                        array_sigma_f_1[k_f] = SINSstate.F_z[0];
+                        array_sigma_f_2[k_f] = SINSstate.F_z[1];
+                        array_sigma_f_3[k_f] = SINSstate.F_z[2];
+                        f_avg[0] += SINSstate.F_z[0];
+                        f_avg[1] += SINSstate.F_z[1];
+                        f_avg[2] += SINSstate.F_z[2];
+                        k_f++;
+                    }
+
+                    // --- Если показания датчиков меняются, то заполняем соответствующие массивы
+                    if (Math.Abs(array_sigma_w_1_tmp_sum - array_w_1[i]) > 1E-9)
+                    {
+                        array_sigma_w_1[k_nu] = SINSstate.W_z[0];
+                        array_sigma_w_2[k_nu] = SINSstate.W_z[1];
+                        array_sigma_w_3[k_nu] = SINSstate.W_z[2];
+                        w_avg[0] += SINSstate.W_z[0];
+                        w_avg[1] += SINSstate.W_z[1];
+                        w_avg[2] += SINSstate.W_z[2];
+                        k_nu++;
+                    }
                 }
+
+
 
                 k++;
 
@@ -181,8 +177,8 @@ namespace Alignment
                 if (k > MovingWindow && k % 10 == 0)
                 {
                     Alignment_avg_rougth.WriteLine(SINSstate.Count.ToString()
-                        + " " + (f_avg[0] / k_f).ToString() + " " + (f_avg[1] / k_f).ToString() + " " + (f_avg[2] / k_f).ToString()
-                        + " " + (w_avg[0] / k_nu).ToString() + " " + (w_avg[1] / k_nu).ToString() + " " + (w_avg[2] / k_nu).ToString()
+                        + " " + (f_avg[0] / Math.Max(k_f, 1)).ToString() + " " + (f_avg[1] / Math.Max(k_f, 1)).ToString() + " " + (f_avg[2] / Math.Max(k_f, 1)).ToString()
+                        + " " + (w_avg[0] / Math.Max(k_nu, 1)).ToString() + " " + (w_avg[1] / Math.Max(k_nu, 1)).ToString() + " " + (w_avg[2] / Math.Max(k_nu, 1)).ToString()
                         + " " + (Heading * SimpleData.ToDegree).ToString() + " " + (Roll * SimpleData.ToDegree).ToString()
                         + " " + (Pitch * SimpleData.ToDegree).ToString() + " " + Latitude.ToString()
                         + " " + (w_avg_x[0] / k_nu).ToString() + " " + (w_avg_x[1] / k_nu).ToString() + " " + (w_avg_x[2] / k_nu).ToString()
@@ -258,6 +254,16 @@ namespace Alignment
             {
                 KalmanVars.Noise_Vel[j] = sigma_f[j];
                 KalmanVars.Noise_Angl[j] = sigma_w[j];
+            }
+
+            // --- Если выбран режим задание конкретных значений сигм шумов датчиков
+            if (SINSstate.NoiseParamDetermin_mode == 2)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    KalmanVars.Noise_Vel[j] = SINSstate.NoiseParamDetermin_SigmaValueF;
+                    KalmanVars.Noise_Angl[j] = SINSstate.NoiseParamDetermin_SigmaValueNu;
+                }
             }
 
             // === По вертикальному шум обычно будет меньше на выставке, поэтому немного сглаживаем  === //

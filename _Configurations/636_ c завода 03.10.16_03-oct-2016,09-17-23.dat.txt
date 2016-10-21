@@ -13,11 +13,18 @@ StartLatitude=57.99829
 StartLongitude=56.26703
 StartHeight=160.0
 
-//Длительность выставки в секундах. Здесь вычисляется СКО 
-//шумовых составляющих ньютонометров и ДУСов
-//Параметр AlignmentStartTime - время в секундах, с которого нужно начать выставку (пропуск плохих начальных данных) 
-AlignmentStartTime=0
-AlignmentDuration=500
+//Длительность выставки в секундах. Здесь вычисляется СКО шумовых составляющих ньютонометров и ДУСов
+AlignmentDuration=430
+
+//NoiseParamDetermin_mode - режим определения шумовых составляющих датчиков
+//Режим NoiseParamDetermin_mode = 0 - параметры шумов определяются на интервале выставки
+//Режим NoiseParamDetermin_mode = 1 - параметры шумов определяются на заданном интервале (NoiseParamDetermin_startTime, NoiseParamDetermin_endTime) в секундах
+//Режим NoiseParamDetermin_mode = 2 - параметры шумов задаются явно: NoiseParamDetermin_SigmaValueF (м/сек^2) и NoiseParamDetermin_SigmaValueNu (рад/сек)
+NoiseParamDetermin_mode = 1
+NoiseParamDetermin_startTime = 220
+NoiseParamDetermin_endTime = 430
+NoiseParamDetermin_SigmaValueF = 0.04
+NoiseParamDetermin_SigmaValueNu = 0.0003
 
 //Флаг (0 или 1) и значение заданного курса, если имеется (в градусах)
 Alignment_HeadingDetermined=1

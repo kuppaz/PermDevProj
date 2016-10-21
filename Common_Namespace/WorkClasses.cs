@@ -231,6 +231,8 @@ namespace Common_Namespace
         public double OdometerData_RoughtScale = 1.0;
         public int OdometerData_RoughtScale_flag = 0;
         public int firstNotNullOdoValue_flg;
+        public int NoiseParamDetermin_mode, NoiseParamDetermin_startTime, NoiseParamDetermin_endTime;
+        public double NoiseParamDetermin_SigmaValueF, NoiseParamDetermin_SigmaValueNu;
     }
 
 
@@ -378,7 +380,7 @@ namespace Common_Namespace
 
         public double LatSNS, LongSNS, AltSNS, SpeedSNS, Ve_SNS, Vn_SNS;
 
-        public int corrected = 0, AlignmentCounts = 0, AlignmentStartTime = 0;
+        public int corrected = 0, AlignmentCounts = 0;
     }
 }
 

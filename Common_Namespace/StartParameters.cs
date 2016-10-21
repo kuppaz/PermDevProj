@@ -27,7 +27,7 @@ namespace Common_Namespace
         {
             StreamReader configFile = new StreamReader(SimpleData.ConfigurationFileIn);
 
-            string frequency = "", StartLatitude = "", StartLongitude = "", StartHeight = "", AlignmentStartTime = "", AlignmentDuration = "", StartCov_Kappa1 = "", StartCov_Kappa3 = ""
+            string frequency = "", StartLatitude = "", StartLongitude = "", StartHeight = "", AlignmentDuration = "", StartCov_Kappa1 = "", StartCov_Kappa3 = ""
                 , StartHeightCorrection_value = "0", StartHeightCorrection_flag = "0"
                 , alpha_kappa_1 = "0"
                 , alpha_kappa_3 = "0"
@@ -41,6 +41,8 @@ namespace Common_Namespace
                 , AlgebraicCalibration_F_Zero = "0"
                 ;
 
+            string NoiseParamDetermin_mode = "0", NoiseParamDetermin_startTime = "0", NoiseParamDetermin_endTime = "0", NoiseParamDetermin_SigmaValueF = "0", NoiseParamDetermin_SigmaValueNu = "0";
+
 
             // --- Чтение параметров из Конфигурационного файла --- //
             for (int i = 0; ; i++)
@@ -52,65 +54,74 @@ namespace Common_Namespace
                 {
                     string[] tmpstr = configLine.Split('=');
 
-                    if (tmpstr[0] == "filename")
+                    if (tmpstr[0].Trim() == "filename")
                         SINSstate.DataInFileName = tmpstr[1];
 
-                    if (tmpstr[0] == "frequency")
+                    if (tmpstr[0].Trim() == "frequency")
                         frequency = tmpstr[1];
 
-                    if (tmpstr[0] == "StartLatitude")
+                    if (tmpstr[0].Trim() == "StartLatitude")
                         StartLatitude = tmpstr[1];
 
-                    if (tmpstr[0] == "StartLongitude")
+                    if (tmpstr[0].Trim() == "StartLongitude")
                         StartLongitude = tmpstr[1];
 
-                    if (tmpstr[0] == "StartHeight")
+                    if (tmpstr[0].Trim() == "StartHeight")
                         StartHeight = tmpstr[1];
 
-                    if (tmpstr[0] == "AlignmentStartTime")
-                        AlignmentStartTime = tmpstr[1];
-                    if (tmpstr[0] == "AlignmentDuration")
+                    if (tmpstr[0].Trim() == "AlignmentDuration")
                         AlignmentDuration = tmpstr[1];
 
-                    if (tmpstr[0] == "Alignment_HeadingDetermined")
+                    if (tmpstr[0].Trim() == "Alignment_HeadingDetermined")
                         Alignment_HeadingDetermined = tmpstr[1];
-                    if (tmpstr[0] == "Alignment_HeadingValue")
+                    if (tmpstr[0].Trim() == "Alignment_HeadingValue")
                         Alignment_HeadingValue = tmpstr[1];
 
-                    if (tmpstr[0] == "Alignment_RollDetermined")
+                    if (tmpstr[0].Trim() == "NoiseParamDetermin_mode")
+                        NoiseParamDetermin_mode = tmpstr[1];
+                    if (tmpstr[0].Trim() == "NoiseParamDetermin_startTime")
+                        NoiseParamDetermin_startTime = tmpstr[1];
+                    if (tmpstr[0].Trim() == "NoiseParamDetermin_endTime")
+                        NoiseParamDetermin_endTime = tmpstr[1];
+                    if (tmpstr[0].Trim() == "NoiseParamDetermin_SigmaValueF")
+                        NoiseParamDetermin_SigmaValueF = tmpstr[1];
+                    if (tmpstr[0].Trim() == "NoiseParamDetermin_SigmaValueNu")
+                        NoiseParamDetermin_SigmaValueNu = tmpstr[1];
+
+                    if (tmpstr[0].Trim() == "Alignment_RollDetermined")
                         Alignment_RollDetermined = tmpstr[1];
-                    if (tmpstr[0] == "Alignment_RollValue")
+                    if (tmpstr[0].Trim() == "Alignment_RollValue")
                         Alignment_RollValue = tmpstr[1];
 
-                    if (tmpstr[0] == "Alignment_PitchDetermined")
+                    if (tmpstr[0].Trim() == "Alignment_PitchDetermined")
                         Alignment_PitchDetermined = tmpstr[1];
-                    if (tmpstr[0] == "Alignment_PitchValue")
+                    if (tmpstr[0].Trim() == "Alignment_PitchValue")
                         Alignment_PitchValue = tmpstr[1];
 
-                    if (tmpstr[0] == "SINS_is_accurateMounted_by_kappa_1")
+                    if (tmpstr[0].Trim() == "SINS_is_accurateMounted_by_kappa_1")
                         SINS_is_accurateMounted_by_kappa_1 = tmpstr[1];
 
-                    if (tmpstr[0] == "SINS_is_accurateMounted_by_kappa_3")
+                    if (tmpstr[0].Trim() == "SINS_is_accurateMounted_by_kappa_3")
                         SINS_is_accurateMounted_by_kappa_3 = tmpstr[1];
 
-                    if (tmpstr[0] == "SINS_is_accurateMounted_by_scaleError")
+                    if (tmpstr[0].Trim() == "SINS_is_accurateMounted_by_scaleError")
                         SINS_is_accurateMounted_by_scaleError = tmpstr[1];
 
-                    if (tmpstr[0] == "StartHeightCorrection_flag")
+                    if (tmpstr[0].Trim() == "StartHeightCorrection_flag")
                         StartHeightCorrection_flag = tmpstr[1];
-                    if (tmpstr[0] == "StartHeightCorrection_value")
+                    if (tmpstr[0].Trim() == "StartHeightCorrection_value")
                         StartHeightCorrection_value = tmpstr[1];
 
-                    if (tmpstr[0] == "alpha_kappa_1")
+                    if (tmpstr[0].Trim() == "alpha_kappa_1")
                         alpha_kappa_1 = tmpstr[1];
 
-                    if (tmpstr[0] == "alpha_kappa_3")
+                    if (tmpstr[0].Trim() == "alpha_kappa_3")
                         alpha_kappa_3 = tmpstr[1];
 
-                    if (tmpstr[0] == "ScaleError")
+                    if (tmpstr[0].Trim() == "ScaleError")
                         ScaleError = tmpstr[1];
 
-                    if (tmpstr[0] == "AlgebraicCalibration_F_Zero")
+                    if (tmpstr[0].Trim() == "AlgebraicCalibration_F_Zero")
                         AlgebraicCalibration_F_Zero = tmpstr[1];
                 }
             }
@@ -122,8 +133,14 @@ namespace Common_Namespace
             SINSstate.OdoLimitMeasuresNum = 5;
 
             // --- Количество тактов БИНС для начальной выставки от начала  --- //
-            ProcHelp.AlignmentStartTime = Convert.ToInt32(Math.Round(Convert.ToDouble(AlignmentStartTime) / SINSstate.Freq));
-            ProcHelp.AlignmentCounts = Convert.ToInt32(Math.Round(Convert.ToDouble(AlignmentDuration) / SINSstate.Freq)) - ProcHelp.AlignmentStartTime;
+            ProcHelp.AlignmentCounts = Convert.ToInt32(Math.Round(Convert.ToDouble(AlignmentDuration) / SINSstate.Freq));
+
+            SINSstate.NoiseParamDetermin_mode = Convert.ToInt32(NoiseParamDetermin_mode);
+            SINSstate.NoiseParamDetermin_startTime = Convert.ToInt32(Math.Round(Convert.ToDouble(NoiseParamDetermin_startTime) / SINSstate.Freq));
+            SINSstate.NoiseParamDetermin_endTime = Math.Min(Convert.ToInt32(Math.Round(Convert.ToDouble(NoiseParamDetermin_endTime) / SINSstate.Freq)), ProcHelp.AlignmentCounts);
+
+            SINSstate.NoiseParamDetermin_SigmaValueF = Convert.ToDouble(NoiseParamDetermin_SigmaValueF);
+            SINSstate.NoiseParamDetermin_SigmaValueNu = Convert.ToDouble(NoiseParamDetermin_SigmaValueNu);
 
             // --- Заданные значения начальных углов ориентации: флаги и значения --- //
             if (Convert.ToInt32(Alignment_HeadingDetermined) == 1)
