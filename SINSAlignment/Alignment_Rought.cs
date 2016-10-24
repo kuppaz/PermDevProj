@@ -252,8 +252,12 @@ namespace Alignment
             // --- вычисляются шумы ньютонометров и дусов --- //
             for (int j = 0; j < 3; j++)
             {
-                KalmanVars.Noise_Vel[j] = sigma_f[j];
-                KalmanVars.Noise_Angl[j] = sigma_w[j];
+                // --- Если двигатель на стоянке включен, то уменьшаем шум
+                double decrementNoise = 1;
+                if (SINSstate.AlignmentEngineIsOff == 0) decrementNoise = 5;
+
+                KalmanVars.Noise_Vel[j] = sigma_f[j] / decrementNoise;
+                KalmanVars.Noise_Angl[j] = sigma_w[j] / decrementNoise;
             }
 
             // --- Если выбран режим задание конкретных значений сигм шумов датчиков

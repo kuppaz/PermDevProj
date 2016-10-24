@@ -233,6 +233,7 @@ namespace Common_Namespace
         public int firstNotNullOdoValue_flg;
         public int NoiseParamDetermin_mode, NoiseParamDetermin_startTime, NoiseParamDetermin_endTime;
         public double NoiseParamDetermin_SigmaValueF, NoiseParamDetermin_SigmaValueNu;
+        public int AlignmentEngineIsOff;
     }
 
 

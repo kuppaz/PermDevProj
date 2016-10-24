@@ -337,6 +337,10 @@ namespace Common_Namespace
             KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 1) * iMq + iMx_alphaBeta + 1] = Noise_Angl_in_Mx[1] * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 2) * iMq + iMx_alphaBeta + 2] = Noise_Angl_in_Mx[2] * sqrt_freq;
 
+            KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 0) * iMq + iMx_Nu0 + 0] = 0.005 * SimpleData.ToRadian / 3600.0 * 0.1;
+            KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 1) * iMq + iMx_Nu0 + 1] = 0.005 * SimpleData.ToRadian / 3600.0 * 0.1;
+            KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 2) * iMq + iMx_Nu0 + 2] = 0.005 * SimpleData.ToRadian / 3600.0 * 0.1;
+
             // --- шумы по горизонтальному одометрическому решению
             KalmanVars.CovarianceMatrixNoise[(iMx_r12_odo + 0) * iMq + iMx_r12_odo + 0] = KalmanVars.Noise_Pos * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_r12_odo + 1) * iMq + iMx_r12_odo + 1] = KalmanVars.Noise_Pos * sqrt_freq;

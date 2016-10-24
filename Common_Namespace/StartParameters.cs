@@ -41,6 +41,7 @@ namespace Common_Namespace
                 , AlgebraicCalibration_F_Zero = "0"
                 ;
 
+            string AlignmentEngineIsOff = "1";
             string NoiseParamDetermin_mode = "0", NoiseParamDetermin_startTime = "0", NoiseParamDetermin_endTime = "0", NoiseParamDetermin_SigmaValueF = "0", NoiseParamDetermin_SigmaValueNu = "0";
 
 
@@ -71,6 +72,9 @@ namespace Common_Namespace
 
                     if (tmpstr[0].Trim() == "AlignmentDuration")
                         AlignmentDuration = tmpstr[1];
+
+                    if (tmpstr[0].Trim() == "AlignmentEngineIsOff")
+                        AlignmentEngineIsOff = tmpstr[1];
 
                     if (tmpstr[0].Trim() == "Alignment_HeadingDetermined")
                         Alignment_HeadingDetermined = tmpstr[1];
@@ -134,6 +138,8 @@ namespace Common_Namespace
 
             // --- Количество тактов БИНС для начальной выставки от начала  --- //
             ProcHelp.AlignmentCounts = Convert.ToInt32(Math.Round(Convert.ToDouble(AlignmentDuration) / SINSstate.Freq));
+
+            SINSstate.AlignmentEngineIsOff = Convert.ToInt32(AlignmentEngineIsOff);
 
             SINSstate.NoiseParamDetermin_mode = Convert.ToInt32(NoiseParamDetermin_mode);
             SINSstate.NoiseParamDetermin_startTime = Convert.ToInt32(Math.Round(Convert.ToDouble(NoiseParamDetermin_startTime) / SINSstate.Freq));

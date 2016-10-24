@@ -140,7 +140,7 @@ namespace SINSProcessingModes
                     )
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, 0.0, 0.0, SINSstate.Altitude_Start, SINSstate.Noise_Marker_PositionError);
 
-                if (SINSstate.DataInFileName == "GCEF_format_Azimuth10B_450612_48H_17-Feb-2016_cut_5h.txt")
+                if (SINSstate.DataInFileName.Contains("GCEF_format_Azimuth10B_450612_48H_17-Feb-2016") == true)
                     if (i % 1000 == 0)
                         CorrectionModel.Make_H_DRIFTS(KalmanVars, SINSstate, SINSstate_OdoMod, ProcHelp);
 

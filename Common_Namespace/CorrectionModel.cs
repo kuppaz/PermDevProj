@@ -166,7 +166,7 @@ namespace Common_Namespace
             double[] tempVect = new double[3];
 
             // --- шум измерения. Если объект стоит - уменьшаем
-            double Noize = 5.0 * SimpleData.ToRadian;
+            double Noize = 0.1 * SimpleData.ToRadian;
 
 
             //---Разбиение на три составляющие---
@@ -226,6 +226,8 @@ namespace Common_Namespace
 
                 KalmanVars.Vertical_cnt_measures += 1;
             }
+
+            SINSstate.flag_UsingCorrection = true;
         }
 
 
