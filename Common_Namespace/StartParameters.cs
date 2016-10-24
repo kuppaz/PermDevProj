@@ -185,9 +185,9 @@ namespace Common_Namespace
 
 
             // --- Шум по горизонтальным ошибкам координат --- //
-            KalmanVars.Noise_Pos = 0.1;
+            KalmanVars.Noise_Pos = 0.5;
             // --- Шум по вертикальным ошибкам координат --- //
-            KalmanVars.Noise_Pos_Vertical = 0.1;
+            //KalmanVars.Noise_Pos_Vertical = 0.01;
             // -------------------------------------------//
 
             // --- определяем мультипликатор для шума вертикального измерения по одометру

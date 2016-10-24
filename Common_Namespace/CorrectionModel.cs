@@ -25,12 +25,12 @@ namespace Common_Namespace
             double[] tempVect = new double[3];
 
             // --- шум измерения. Если объект стоит - уменьшаем
-            double Noize = 0.1;
+            double Noize = 1.0;
             double longOdoIncrement = SINSstate.OdometerData.odometer_left.Value - SINSstate.OdometerLeft_ArrayOfPrev[Math.Min(20, SINSstate.OdometerLeft_ArrayOfPrev.Length)];
             double longOdoIncrement_dt = SINSstate.Time + SINSstate.Time_Alignment - SINSstate.OdometerLeft_ArrayOfPrevTime[Math.Min(20, SINSstate.OdometerLeft_ArrayOfPrev.Length)];
 
             if (longOdoIncrement / longOdoIncrement_dt == 0.0)
-                Noize = 0.01;
+                Noize = 0.001;
 
 
             //---Разбиение на три составляющие---
