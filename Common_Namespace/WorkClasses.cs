@@ -234,6 +234,10 @@ namespace Common_Namespace
         public int NoiseParamDetermin_mode, NoiseParamDetermin_startTime, NoiseParamDetermin_endTime;
         public double NoiseParamDetermin_SigmaValueF, NoiseParamDetermin_SigmaValueNu;
         public int AlignmentEngineIsOff;
+
+        public int forDriftMeasureWsAvg_cnt;
+        public double[] forDriftMeasureWsAvg = new double[3];
+        public double Vertical_NoiseDecrementParamForR3 = 1.0;
     }
 
 

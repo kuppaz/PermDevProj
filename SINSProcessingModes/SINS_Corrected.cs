@@ -140,9 +140,14 @@ namespace SINSProcessingModes
                     )
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, 0.0, 0.0, SINSstate.Altitude_Start, SINSstate.Noise_Marker_PositionError);
 
-                if (SINSstate.DataInFileName.Contains("GCEF_format_Azimuth10B_450612_48H_17-Feb-2016") == true)
-                    if (i % 1000 == 0)
-                        CorrectionModel.Make_H_DRIFTS(KalmanVars, SINSstate, SINSstate_OdoMod, ProcHelp);
+                //if (SINSstate.DataInFileName.Contains("GCEF_format_Azimuth10B_450612_48H_17-Feb-2016") == true)
+                //{
+                //    SINSstate.forDriftMeasureWsAvg_cnt++;
+                //    for (int h= 0; h< 3; h++)
+                //        SINSstate.forDriftMeasureWsAvg[h] += SINSstate.W_z[h];
+                //    if (i % 180000 == 0)
+                //        CorrectionModel.Make_H_DRIFTS(KalmanVars, SINSstate, SINSstate_OdoMod, ProcHelp);
+                //}
 
                 // --- Если запуск в режиме автономного решения БИНС, то коррекции нет --- //
                 if (SINSstate.flag_AutonomouseSolution == true)

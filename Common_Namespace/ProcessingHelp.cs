@@ -148,7 +148,7 @@ namespace Common_Namespace
                 SINSstate.OdometerData.odometer_right.isReady = Convert.ToInt32(dataArray2[21]);
 
 
-                // --- ЗАГЛУШКА ---
+                // --- ЗАГЛУШКА для файла со стоянкой, поскольку здесь всегда для одометра isReady = 0 ---
                 if (SINSstate.DataInFileName.Contains("GCEF_format_Azimuth10B_450612_48H_17-Feb-2016") == true && SINSstate.Count % 5 == 0)
                     SINSstate.OdometerData.odometer_left.isReady = 1;
                 // --- ЗАГЛУШКА ---

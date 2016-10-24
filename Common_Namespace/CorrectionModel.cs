@@ -25,9 +25,10 @@ namespace Common_Namespace
             double[] tempVect = new double[3];
 
             // --- шум измерения. Если объект стоит - уменьшаем
-            double Noize = 1.0;
+            double Noize = 0.1;
             double longOdoIncrement = SINSstate.OdometerData.odometer_left.Value - SINSstate.OdometerLeft_ArrayOfPrev[Math.Min(20, SINSstate.OdometerLeft_ArrayOfPrev.Length)];
             double longOdoIncrement_dt = SINSstate.Time + SINSstate.Time_Alignment - SINSstate.OdometerLeft_ArrayOfPrevTime[Math.Min(20, SINSstate.OdometerLeft_ArrayOfPrev.Length)];
+
             if (longOdoIncrement / longOdoIncrement_dt == 0.0)
                 Noize = 0.01;
 
@@ -166,7 +167,7 @@ namespace Common_Namespace
             double[] tempVect = new double[3];
 
             // --- шум измерения. Если объект стоит - уменьшаем
-            double Noize = 0.1 * SimpleData.ToRadian;
+            double Noize = 0.00001 * SimpleData.ToRadian;
 
 
             //---Разбиение на три составляющие---
@@ -176,10 +177,15 @@ namespace Common_Namespace
 
             SimpleOperations.CopyArray(SINSstate.u_s, SINSstate.A_sx0 * SINSstate.u_x);
 
+            double[] W_z_avg = new double[3];
+            W_z_avg[0] = SINSstate.forDriftMeasureWsAvg[0] / SINSstate.forDriftMeasureWsAvg_cnt;
+            W_z_avg[1] = SINSstate.forDriftMeasureWsAvg[1] / SINSstate.forDriftMeasureWsAvg_cnt;
+            W_z_avg[2] = SINSstate.forDriftMeasureWsAvg[2] / SINSstate.forDriftMeasureWsAvg_cnt;
+
             // --- Формирование измерений по разности координат БИНС и одометрического счисления
-            KalmanVars.Measure[(KalmanVars.cnt_measures + 0)] = SINSstate.W_z[0] - SINSstate.u_s[0];
-            KalmanVars.Measure[(KalmanVars.cnt_measures + 1)] = SINSstate.W_z[1] - SINSstate.u_s[1];
-            KalmanVars.Measure[(KalmanVars.cnt_measures + 2)] = SINSstate.W_z[2] - SINSstate.u_s[2];
+            KalmanVars.Measure[(KalmanVars.cnt_measures + 0)] = W_z_avg[0] - SINSstate.u_s[0];
+            KalmanVars.Measure[(KalmanVars.cnt_measures + 1)] = W_z_avg[1] - SINSstate.u_s[1];
+            KalmanVars.Measure[(KalmanVars.cnt_measures + 2)] = W_z_avg[2] - SINSstate.u_s[2];
 
             KalmanVars.Noize_Z[(KalmanVars.cnt_measures + 0)] = Noize;
             KalmanVars.Noize_Z[(KalmanVars.cnt_measures + 1)] = Noize;

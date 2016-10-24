@@ -187,8 +187,11 @@ namespace Common_Namespace
             // --- Шум по горизонтальным ошибкам координат --- //
             KalmanVars.Noise_Pos = 0.1;
             // --- Шум по вертикальным ошибкам координат --- //
-            KalmanVars.Noise_Pos_Vertical = 0.01;
+            KalmanVars.Noise_Pos_Vertical = 0.1;
             // -------------------------------------------//
+
+            // --- определяем мультипликатор для шума вертикального измерения по одометру
+            SINSstate.OdoVerticalNoiseMultiplicator = 1;
 
             // --- Начальные ковариации --- //
             SINSstate.stdR = 0.01; // по ошибке координат БИНС, м
@@ -216,10 +219,6 @@ namespace Common_Namespace
             ProcHelp.LongSNS = SINSstate_OdoMod.Longitude = SINSstate.Longitude_Start = SINSstate.LongSNS = SINSstate.Longitude = Convert.ToDouble(StartLongitude) * SimpleData.ToRadian;
             ProcHelp.LatSNS = SINSstate_OdoMod.Latitude = SINSstate.Latitude_Start = SINSstate.LatSNS = SINSstate.Latitude = Convert.ToDouble(StartLatitude) * SimpleData.ToRadian;
             ProcHelp.AltSNS = SINSstate_OdoMod.Height = SINSstate.Altitude_Start = SINSstate.AltSNS = SINSstate.Height = SINSstate.Altitude_prev = Convert.ToDouble(StartHeight);
-
-
-            // --- определяем мультипликатор для шума вертикального измерения по одометру
-            SINSstate.OdoVerticalNoiseMultiplicator = 1;
 
 
             //--- В случае выставления значения поправки на угол kappa_3 именшаем нач.ковариацию ---//
