@@ -133,7 +133,7 @@ namespace Common_Namespace
                         SINSstate.OdometerData_Sign = -1;
                         SINSstate.OdometerLeftPrev *= SINSstate.OdometerData_Sign;
                     }
-                    if (SINSstate.distance_by_SINS > 100.0 && SINSstate.OdometerData_RoughtScale_flag == 0 && Math.Abs(1 - Odo_SINS_VS_distance_coefficient) > 0.1)
+                    if (SINSstate.distance_by_SINS > 100.0 && SINSstate.OdometerData_RoughtScale_flag == 0 && Math.Abs(1 - Odo_SINS_VS_distance_coefficient) > 0.3)
                     {
                         SINSstate.OdometerData_RoughtScale = Odo_SINS_VS_distance_coefficient;
                         SINSstate.OdometerLeftPrev /= SINSstate.OdometerData_RoughtScale;
