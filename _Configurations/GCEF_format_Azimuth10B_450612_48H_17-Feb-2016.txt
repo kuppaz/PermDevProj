@@ -3,8 +3,8 @@
 //Одна строка - один параметр
 
 //filename - название входного файла с данными в папке "_Data In"
-//filename=GCEF_format_Azimuth10B_450612_48H_17-Feb-2016.txt
-filename=GCEF_format_Azimuth10B_450612_48H_17-Feb-2016_cut_5h.txt
+filename=GCEF_format_Azimuth10B_450612_48H_17-Feb-2016.txt
+//filename=GCEF_format_Azimuth10B_450612_48H_17-Feb-2016_cut_5h.txt
 
 //Частота съема данных с БИНС
 frequency=0.01024
