@@ -57,6 +57,7 @@ namespace Common_Namespace
                         t++;
                     }
 
+                SINSstate.i_global++;
                 SINSstate.Count = Convert.ToDouble(dataArray2[0]);
 
                 if (ProcHelp.initCount == false) { ProcHelp.initCount = true; SINSstate.initCount = SINSstate.Count - 1; }

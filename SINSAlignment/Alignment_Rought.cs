@@ -109,7 +109,7 @@ namespace Alignment
 
 
                 // --- Если показания датчиков меняются, то заполняем соответствующие массивы
-                if (SINSstate.NoiseParamDetermin_mode != 1 || SINSstate.NoiseParamDetermin_mode == 1 && SINSstate.Count > SINSstate.NoiseParamDetermin_startTime && SINSstate.Count < SINSstate.NoiseParamDetermin_endTime)
+                if (SINSstate.NoiseParamDetermin_mode != 1 || SINSstate.NoiseParamDetermin_mode == 1 && SINSstate.i_global > SINSstate.NoiseParamDetermin_startTime && SINSstate.i_global < SINSstate.NoiseParamDetermin_endTime)
                 {
                     if (Math.Abs(array_sigma_f_1_tmp_sum - array_f_1[i]) > 1E-9)
                     {
@@ -176,7 +176,7 @@ namespace Alignment
                 // --- Вывод текущих вычисленных параметров в файлы
                 if (k > MovingWindow && k % 10 == 0)
                 {
-                    Alignment_avg_rougth.WriteLine(SINSstate.Count.ToString()
+                    Alignment_avg_rougth.WriteLine(SINSstate.Time.ToString()
                         + " " + (f_avg[0] / Math.Max(k_f, 1)).ToString() + " " + (f_avg[1] / Math.Max(k_f, 1)).ToString() + " " + (f_avg[2] / Math.Max(k_f, 1)).ToString()
                         + " " + (w_avg[0] / Math.Max(k_nu, 1)).ToString() + " " + (w_avg[1] / Math.Max(k_nu, 1)).ToString() + " " + (w_avg[2] / Math.Max(k_nu, 1)).ToString()
                         + " " + (Heading * SimpleData.ToDegree).ToString() + " " + (Roll * SimpleData.ToDegree).ToString()
@@ -227,37 +227,64 @@ namespace Alignment
             f_avg[2] = f_avg[2] / k_f; w_avg[2] = w_avg[2] / k_nu;
 
             // --- вычисляем СКО датчиков
+            //for (int j = 1; j < k_f; j++)
+            //{
+            //    sigma_f[0] += Math.Abs(array_sigma_f_1[j] - f_avg[0]);
+            //    sigma_f[1] += Math.Abs(array_sigma_f_2[j] - f_avg[1]);
+            //    sigma_f[2] += Math.Abs(array_sigma_f_3[j] - f_avg[2]);
+            //}
+            //sigma_f[0] = sigma_f[0] / k_f;
+            //sigma_f[1] = sigma_f[1] / k_f;
+            //sigma_f[2] = sigma_f[2] / k_f;
+
+
+            //for (int j = 1; j < k_nu; j++)
+            //{
+            //    sigma_w[0] += Math.Abs(array_sigma_w_1[j] - w_avg[0]);
+            //    sigma_w[1] += Math.Abs(array_sigma_w_2[j] - w_avg[1]);
+            //    sigma_w[2] += Math.Abs(array_sigma_w_3[j] - w_avg[2]);
+            //}
+            //sigma_w[0] = sigma_w[0] / k_nu;
+            //sigma_w[1] = sigma_w[1] / k_nu;
+            //sigma_w[2] = sigma_w[2] / k_nu;
+
+
+
+
             for (int j = 1; j < k_f; j++)
             {
-                sigma_f[0] += Math.Abs(array_sigma_f_1[j] - f_avg[0]);
-                sigma_f[1] += Math.Abs(array_sigma_f_2[j] - f_avg[1]);
-                sigma_f[2] += Math.Abs(array_sigma_f_3[j] - f_avg[2]);
+                sigma_f[0] += Math.Pow((array_sigma_f_1[j] - f_avg[0]), 2);
+                sigma_f[1] += Math.Pow((array_sigma_f_2[j] - f_avg[1]), 2);
+                sigma_f[2] += Math.Pow((array_sigma_f_3[j] - f_avg[2]), 2);
             }
-            sigma_f[0] = sigma_f[0] / k_f;
-            sigma_f[1] = sigma_f[1] / k_f;
-            sigma_f[2] = sigma_f[2] / k_f;
-
+            sigma_f[0] = Math.Sqrt(sigma_f[0] / k_f);
+            sigma_f[1] = Math.Sqrt(sigma_f[1] / k_f);
+            sigma_f[2] = Math.Sqrt(sigma_f[2] / k_f);
 
             for (int j = 1; j < k_nu; j++)
             {
-                sigma_w[0] += Math.Abs(array_sigma_w_1[j] - w_avg[0]);
-                sigma_w[1] += Math.Abs(array_sigma_w_2[j] - w_avg[1]);
-                sigma_w[2] += Math.Abs(array_sigma_w_3[j] - w_avg[2]);
+                sigma_w[0] += Math.Pow((array_sigma_w_1[j] - w_avg[0]), 2);
+                sigma_w[1] += Math.Pow((array_sigma_w_2[j] - w_avg[1]), 2);
+                sigma_w[2] += Math.Pow((array_sigma_w_3[j] - w_avg[2]), 2);
             }
-            sigma_w[0] = sigma_w[0] / k_nu;
-            sigma_w[1] = sigma_w[1] / k_nu;
-            sigma_w[2] = sigma_w[2] / k_nu;
+            sigma_w[0] = Math.Sqrt(sigma_w[0] / k_nu);
+            sigma_w[1] = Math.Sqrt(sigma_w[1] / k_nu);
+            sigma_w[2] = Math.Sqrt(sigma_w[2] / k_nu);
 
 
             // --- вычисляются шумы ньютонометров и дусов --- //
             for (int j = 0; j < 3; j++)
             {
                 // --- Если двигатель на стоянке включен, то уменьшаем шум
-                double decrementNoise = 1;
-                if (SINSstate.AlignmentEngineIsOff == 0) decrementNoise = 5;
+                double decrementNoiseF = 1, decrementNoiseNu = 1;
+                if (SINSstate.AlignmentEngineIsOff == 0)
+                {
+                    decrementNoiseF = 5;
+                    decrementNoiseNu = 7;
+                }
 
-                KalmanVars.Noise_Vel[j] = sigma_f[j] / decrementNoise;
-                KalmanVars.Noise_Angl[j] = sigma_w[j] / decrementNoise;
+                KalmanVars.Noise_Vel[j] = sigma_f[j] / decrementNoiseF;
+                KalmanVars.Noise_Angl[j] = sigma_w[j] / decrementNoiseNu;
             }
 
             // --- Если выбран режим задание конкретных значений сигм шумов датчиков

@@ -238,6 +238,7 @@ namespace Common_Namespace
         public int forDriftMeasureWsAvg_cnt;
         public double[] forDriftMeasureWsAvg = new double[3];
         public double Vertical_NoiseDecrementParamForR3 = 1.0;
+        public int i_global;
     }
 
 
