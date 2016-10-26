@@ -298,7 +298,7 @@ namespace Common_Namespace
 
         public static void MatrixNoise_ReDef(SINS_State SINSstate, Kalman_Vars KalmanVars)
         {
-            int iMx = SimpleData.iMx, iMz = SimpleData.iMz, iMq = SimpleData.iMq, iMx_r12_odo = SINSstate.value_iMx_r_odo_12;
+            int iMx = SimpleData.iMx, iMz = SimpleData.iMz, iMq = SimpleData.iMq, iMx_r12_odo = SINSstate.value_iMx_r_odo_12, iMx_kappa_3_ds = SINSstate.value_iMx_kappa_3_ds;
             int iMx_dV_12 = SINSstate.value_iMx_dV_12, iMx_alphaBeta = SINSstate.value_iMx_alphaBeta, iMx_Nu0 = SINSstate.value_iMx_Nu0;
 
             double sqrt_freq_vert = Math.Sqrt(Math.Abs(SINSstate.Freq));
@@ -359,7 +359,7 @@ namespace Common_Namespace
 
         public static void Make_A(SINS_State SINSstate, Kalman_Vars KalmanVars, SINS_State SINSstate_OdoMod)
         {
-            int iMx = SimpleData.iMx, iMz = SimpleData.iMz, iMq = SimpleData.iMq, iMx_kappa_3_ds = SINSstate.value_iMx_kappa_3_ds,iMx_r12_odo = SINSstate.value_iMx_r_odo_12;
+            int iMx = SimpleData.iMx, iMz = SimpleData.iMz, iMq = SimpleData.iMq, iMx_kappa_3_ds = SINSstate.value_iMx_kappa_3_ds, iMx_r12_odo = SINSstate.value_iMx_r_odo_12;
 
             int iMx_dV_12 = SINSstate.value_iMx_dV_12,
                 iMx_alphaBeta = SINSstate.value_iMx_alphaBeta,

@@ -38,7 +38,6 @@ namespace Common_Namespace
                 , SINS_is_accurateMounted_by_kappa_1 = "0"
                 , SINS_is_accurateMounted_by_kappa_3 = "0"
                 , SINS_is_accurateMounted_by_scaleError = "0"
-                , AlgebraicCalibration_F_Zero = "0"
                 ;
 
             string AlignmentEngineIsOff = "1";
@@ -124,9 +123,6 @@ namespace Common_Namespace
 
                     if (tmpstr[0].Trim() == "ScaleError")
                         ScaleError = tmpstr[1];
-
-                    if (tmpstr[0].Trim() == "AlgebraicCalibration_F_Zero")
-                        AlgebraicCalibration_F_Zero = tmpstr[1];
                 }
             }
 
@@ -173,9 +169,6 @@ namespace Common_Namespace
             else
                 SINSstate.first_N_meters_StartHeightCorrection_flag = false;
             SINSstate.first_N_meters_StartHeightCorrection_value = Convert.ToDouble(StartHeightCorrection_value);
-
-            if (Convert.ToInt32(AlgebraicCalibration_F_Zero) == 1)
-                SINSstate.AlgebraicCalibration_F_Zero = true;
 
 
             // --- Углы рассогласования осей БИНС и динамических осей объекта, если это нужно --- //

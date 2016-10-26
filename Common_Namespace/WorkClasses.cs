@@ -225,7 +225,7 @@ namespace Common_Namespace
         public string DataInFileName;
         public int Input_nMode;
         public double OdoVerticalNoiseMultiplicator;
-        public bool AlgebraicCalibration_F_Zero;
+        //public bool AlgebraicCalibration_F_Zero;
         public double distance_by_SINS, distance_by_SINS_E, distance_by_SINS_N;
         public int OdometerData_Sign = 1;
         public double OdometerData_RoughtScale = 1.0;

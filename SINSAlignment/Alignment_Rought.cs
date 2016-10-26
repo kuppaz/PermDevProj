@@ -30,6 +30,7 @@ namespace Alignment
             Matrix A_xs = new Matrix(3, 3);
 
             StreamWriter Alignment_avg_rougth = new StreamWriter(SimpleData.PathOutputString + "\\Alignment\\Alignment_avg_rougth.txt");
+            StreamWriter Alignment_InputData = new StreamWriter(SimpleData.PathOutputString + "\\Alignment\\Alignment_InputData.txt");
             StreamWriter Alignment_avg_rougthMovingAVG = new StreamWriter(SimpleData.PathOutputString + "\\Alignment\\Alignment_avg_rougth_MovingAVG.txt");
 
             // --- вспомогательные массивы для определения сигмы шумов
@@ -46,8 +47,9 @@ namespace Alignment
             double[] sigma_f = new double[3];
             double[] sigma_w = new double[3];
 
-            Alignment_avg_rougth.WriteLine("count f_1 f_2 f_3 w_1 w_2 w_3 heading roll pitch Latitude");
-            Alignment_avg_rougthMovingAVG.WriteLine("count MA_f_1 MA_f_2 MA_f_3 MA_w_1 MA_w_2 MA_w_3");
+            Alignment_avg_rougth.WriteLine("time f_1 f_2 f_3 w_1 w_2 w_3 heading roll pitch Latitude");
+            Alignment_avg_rougthMovingAVG.WriteLine("time MA_f_1 MA_f_2 MA_f_3 MA_w_1 MA_w_2 MA_w_3");
+            Alignment_InputData.WriteLine("time f_1 f_1_avg f_1_sigma f_2 f_2_avg f_2_sigma f_3 f_3_avg f_3_sigma w_1 w_1_avg w_1_sigma w_2 w_2_avg w_2_sigma w_3 w_3_avg w_3_sigma");
 
 
             while (true)
@@ -133,6 +135,31 @@ namespace Alignment
                         w_avg[2] += SINSstate.W_z[2];
                         k_nu++;
                     }
+
+                    if (SINSstate.i_global % 250 == 0)
+                    {
+                        // --- вычисляем СКО датчиков
+                        for (int j = 1; j < k_f; j++)
+                        {
+                            sigma_f[0] += Math.Abs(array_sigma_f_1[j] - f_avg[0] / Math.Max(k_f, 1));
+                            sigma_f[1] += Math.Abs(array_sigma_f_2[j] - f_avg[1] / Math.Max(k_f, 1));
+                            sigma_f[2] += Math.Abs(array_sigma_f_3[j] - f_avg[2] / Math.Max(k_f, 1));
+                        }
+                        sigma_f[0] = sigma_f[0] / Math.Max(k_f, 1);
+                        sigma_f[1] = sigma_f[1] / Math.Max(k_f, 1);
+                        sigma_f[2] = sigma_f[2] / Math.Max(k_f, 1);
+
+
+                        for (int j = 1; j < k_nu; j++)
+                        {
+                            sigma_w[0] += Math.Abs(array_sigma_w_1[j] - w_avg[0] / Math.Max(k_nu, 1));
+                            sigma_w[1] += Math.Abs(array_sigma_w_2[j] - w_avg[1] / Math.Max(k_nu, 1));
+                            sigma_w[2] += Math.Abs(array_sigma_w_3[j] - w_avg[2] / Math.Max(k_nu, 1));
+                        }
+                        sigma_w[0] = sigma_w[0] / Math.Max(k_nu, 1);
+                        sigma_w[1] = sigma_w[1] / Math.Max(k_nu, 1);
+                        sigma_w[2] = sigma_w[2] / Math.Max(k_nu, 1);
+                    }
                 }
 
 
@@ -189,6 +216,16 @@ namespace Alignment
                 }
 
 
+                // --- Вывод в файл показаний датчиков, среднего и сигмы. Для аналитики
+                Alignment_InputData.WriteLine(SINSstate.Time
+                        + " " + SINSstate.F_z[0] + " " + f_avg[0] / Math.Max(k_f, 1) + " " + (f_avg[0] / Math.Max(k_f, 1) + sigma_f[0])
+                        + " " + SINSstate.F_z[1] + " " + f_avg[1] / Math.Max(k_f, 1) + " " + (f_avg[1] / Math.Max(k_f, 1) + sigma_f[1])
+                        + " " + SINSstate.F_z[2] + " " + f_avg[2] / Math.Max(k_f, 1) + " " + (f_avg[2] / Math.Max(k_f, 1) + sigma_f[2])
+                        + " " + SINSstate.W_z[0] + " " + w_avg[0] / Math.Max(k_nu, 1) + " " + (w_avg[0] / Math.Max(k_nu, 1) + sigma_w[0])
+                        + " " + SINSstate.W_z[1] + " " + w_avg[1] / Math.Max(k_nu, 1) + " " + (w_avg[1] / Math.Max(k_nu, 1) + sigma_w[1])
+                        + " " + SINSstate.W_z[2] + " " + w_avg[2] / Math.Max(k_nu, 1) + " " + (w_avg[2] / Math.Max(k_nu, 1) + sigma_w[2])
+                    );
+
 
 
                 // --- Вывод данных для формирования GRTV файла --- //
@@ -227,49 +264,26 @@ namespace Alignment
             f_avg[2] = f_avg[2] / k_f; w_avg[2] = w_avg[2] / k_nu;
 
             // --- вычисляем СКО датчиков
-            //for (int j = 1; j < k_f; j++)
-            //{
-            //    sigma_f[0] += Math.Abs(array_sigma_f_1[j] - f_avg[0]);
-            //    sigma_f[1] += Math.Abs(array_sigma_f_2[j] - f_avg[1]);
-            //    sigma_f[2] += Math.Abs(array_sigma_f_3[j] - f_avg[2]);
-            //}
-            //sigma_f[0] = sigma_f[0] / k_f;
-            //sigma_f[1] = sigma_f[1] / k_f;
-            //sigma_f[2] = sigma_f[2] / k_f;
-
-
-            //for (int j = 1; j < k_nu; j++)
-            //{
-            //    sigma_w[0] += Math.Abs(array_sigma_w_1[j] - w_avg[0]);
-            //    sigma_w[1] += Math.Abs(array_sigma_w_2[j] - w_avg[1]);
-            //    sigma_w[2] += Math.Abs(array_sigma_w_3[j] - w_avg[2]);
-            //}
-            //sigma_w[0] = sigma_w[0] / k_nu;
-            //sigma_w[1] = sigma_w[1] / k_nu;
-            //sigma_w[2] = sigma_w[2] / k_nu;
-
-
-
-
             for (int j = 1; j < k_f; j++)
             {
-                sigma_f[0] += Math.Pow((array_sigma_f_1[j] - f_avg[0]), 2);
-                sigma_f[1] += Math.Pow((array_sigma_f_2[j] - f_avg[1]), 2);
-                sigma_f[2] += Math.Pow((array_sigma_f_3[j] - f_avg[2]), 2);
+                sigma_f[0] += Math.Abs(array_sigma_f_1[j] - f_avg[0]);
+                sigma_f[1] += Math.Abs(array_sigma_f_2[j] - f_avg[1]);
+                sigma_f[2] += Math.Abs(array_sigma_f_3[j] - f_avg[2]);
             }
-            sigma_f[0] = Math.Sqrt(sigma_f[0] / k_f);
-            sigma_f[1] = Math.Sqrt(sigma_f[1] / k_f);
-            sigma_f[2] = Math.Sqrt(sigma_f[2] / k_f);
+            sigma_f[0] = sigma_f[0] / k_f;
+            sigma_f[1] = sigma_f[1] / k_f;
+            sigma_f[2] = sigma_f[2] / k_f;
+
 
             for (int j = 1; j < k_nu; j++)
             {
-                sigma_w[0] += Math.Pow((array_sigma_w_1[j] - w_avg[0]), 2);
-                sigma_w[1] += Math.Pow((array_sigma_w_2[j] - w_avg[1]), 2);
-                sigma_w[2] += Math.Pow((array_sigma_w_3[j] - w_avg[2]), 2);
+                sigma_w[0] += Math.Abs(array_sigma_w_1[j] - w_avg[0]);
+                sigma_w[1] += Math.Abs(array_sigma_w_2[j] - w_avg[1]);
+                sigma_w[2] += Math.Abs(array_sigma_w_3[j] - w_avg[2]);
             }
-            sigma_w[0] = Math.Sqrt(sigma_w[0] / k_nu);
-            sigma_w[1] = Math.Sqrt(sigma_w[1] / k_nu);
-            sigma_w[2] = Math.Sqrt(sigma_w[2] / k_nu);
+            sigma_w[0] = sigma_w[0] / k_nu;
+            sigma_w[1] = sigma_w[1] / k_nu;
+            sigma_w[2] = sigma_w[2] / k_nu;
 
 
             // --- вычисляются шумы ньютонометров и дусов --- //
@@ -297,10 +311,6 @@ namespace Alignment
                 }
             }
 
-            // === По вертикальному шум обычно будет меньше на выставке, поэтому немного сглаживаем  === //
-            //KalmanVars.Noise_Vel[2] = (KalmanVars.Noise_Vel[0] + KalmanVars.Noise_Vel[1]) / 2.0;
-            //KalmanVars.Noise_Angl[2] = (KalmanVars.Noise_Angl[0] + KalmanVars.Noise_Angl[1]) / 2.0;
-
 
             SINSstate.Pitch = Math.Atan2(f_avg[1], Math.Sqrt(f_avg[0] * f_avg[0] + f_avg[2] * f_avg[2]));
             SINSstate.Roll = -Math.Atan2(f_avg[0], f_avg[2]);
@@ -318,12 +328,9 @@ namespace Alignment
                 SINSstate.AlignAlgebraDrifts[j] = w_avg[j] - U_s[j];
 
             // --- алгебраическая калибровка нулей ньютонометров
-            // --- Покскольку на начальной выставке значения ньютонометров могут быть константами, то по флагу
-            if (SINSstate.AlgebraicCalibration_F_Zero == true)
-            {
-                for (int j = 0; j < 3; j++)
-                    SINSstate.AlignAlgebraZeroF[j] = f_avg[j] - gilmertF[j];
-            }
+            for (int j = 0; j < 3; j++)
+                SINSstate.AlignAlgebraZeroF[j] = f_avg[j] - gilmertF[j];
+
 
             SINSstate.Time_Alignment = SINSstate.Time;
 
@@ -349,6 +356,7 @@ namespace Alignment
 
 
             Alignment_avg_rougth.Close();
+            Alignment_InputData.Close();
             Alignment_avg_rougthMovingAVG.Close();
             return i;
         }
