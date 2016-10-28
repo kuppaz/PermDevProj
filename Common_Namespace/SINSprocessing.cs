@@ -304,6 +304,8 @@ namespace Common_Namespace
             double sqrt_freq_vert = Math.Sqrt(Math.Abs(SINSstate.Freq));
             double sqrt_freq = Math.Sqrt(Math.Abs(SINSstate.Freq));
 
+            //if (Math.Abs(SimpleOperations.AbsoluteVectorValue(SINSstate.Vx_0)) < 1.0)
+
             sqrt_freq = 1.0;
             sqrt_freq_vert = 1.0;
 
@@ -335,11 +337,13 @@ namespace Common_Namespace
             KalmanVars.CovarianceMatrixNoise[(iMx_dV_12 + 1) * iMq + iMx_alphaBeta + 1] = SINSstate.Vx_0[0] * Noise_Angl_in_Mx[1] * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 0) * iMq + iMx_alphaBeta + 0] = Noise_Angl_in_Mx[0] * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 1) * iMq + iMx_alphaBeta + 1] = Noise_Angl_in_Mx[1] * sqrt_freq;
-            KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 2) * iMq + iMx_alphaBeta + 2] = Noise_Angl_in_Mx[2] * sqrt_freq;
+            KalmanVars.CovarianceMatrixNoise[(iMx_alphaBeta + 2) * iMq + iMx_alphaBeta + 2] = Noise_Angl_in_Mx[2] * sqrt_freq;// / 10.0;
 
             // --- шумы по горизонтальному одометрическому решению
             KalmanVars.CovarianceMatrixNoise[(iMx_r12_odo + 0) * iMq + iMx_r12_odo + 0] = KalmanVars.Noise_Pos * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_r12_odo + 1) * iMq + iMx_r12_odo + 1] = KalmanVars.Noise_Pos * sqrt_freq;
+
+            //SimpleOperations.PrintMatrixToFile(KalmanVars.CovarianceMatrixS_m, SimpleData.iMx, SimpleData.iMx, "CovarianceMatrixNoise");
 
 
 
@@ -350,7 +354,6 @@ namespace Common_Namespace
             KalmanVars.Vertical_CovarianceMatrixNoise[0 * SimpleData.iMq_Vertical + 0] = KalmanVars.Noise_Pos_Vertical * sqrt_freq_vert;
             KalmanVars.Vertical_CovarianceMatrixNoise[1 * SimpleData.iMq_Vertical + 1] = Noise_Vel_in_Mx[2] * sqrt_freq_vert;
             KalmanVars.Vertical_CovarianceMatrixNoise[SINSstate.Vertical_rOdo3 * SimpleData.iMq_Vertical + SINSstate.Vertical_rOdo3] = KalmanVars.Noise_Pos_Vertical * sqrt_freq_vert;
-
         }
 
 
