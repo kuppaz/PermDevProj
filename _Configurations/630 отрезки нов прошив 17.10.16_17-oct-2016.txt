@@ -1,0 +1,60 @@
+﻿//Пустая строка или строка, первые 2 символа которых "//", пропускаются
+//Параметры подтягиваются по ключевым словам &param_name=&param_value с обязательным разделителем "="
+//Одна строка - один параметр
+
+//filename - название входного файла с данными в папке "_Data In"
+filename=630 отрезки нов прошив 17.10.16_17-oct-2016.txt
+
+//Частота съема данных с БИНС
+frequency=0.01024
+
+//Начальные координаты
+StartLatitude=58.02253
+StartLongitude=56.78261
+StartHeight=160.0
+
+//Длительность выставки в секундах. Здесь вычисляется СКО шумовых составляющих ньютонометров и ДУСов
+AlignmentDuration=430
+
+//Параметр AlignmentEngineIsOff выключен (1) ли двигатель во время стоянки или включен (0)
+AlignmentEngineIsOff=1
+
+//NoiseParamDetermin_mode - режим определения шумовых составляющих датчиков
+//Режим NoiseParamDetermin_mode = 0 - параметры шумов определяются на интервале выставки
+//Режим NoiseParamDetermin_mode = 1 - параметры шумов определяются на заданном интервале (NoiseParamDetermin_startTime, NoiseParamDetermin_endTime) в секундах
+//Режим NoiseParamDetermin_mode = 2 - параметры шумов задаются явно: NoiseParamDetermin_SigmaValueF (м/сек^2) и NoiseParamDetermin_SigmaValueNu (рад/сек)
+NoiseParamDetermin_mode = 0
+NoiseParamDetermin_startTime = 220
+NoiseParamDetermin_endTime = 430
+NoiseParamDetermin_SigmaValueF = 0.04
+NoiseParamDetermin_SigmaValueNu = 0.0003
+
+//Флаг (0 или 1) и значение заданного курса, если имеется (в градусах)
+Alignment_HeadingDetermined=1
+Alignment_HeadingValue=-84.89584
+Alignment_RollDetermined=1
+Alignment_RollValue=3.10395
+Alignment_PitchDetermined=1
+Alignment_PitchValue=5.24027
+
+//Флаг точно ли установлен БИНС на объекте (откалиброваны ли углы 
+//рассогласования осей БИНС и строительных осей): 1 - точно, 0 - нет
+SINS_is_accurateMounted_by_kappa_1=0
+SINS_is_accurateMounted_by_kappa_3=0
+
+//Коррекция по стартовой высоте первые N метров. Флаг: 
+//1 - включить коррекцию, 0 - не использовать
+StartHeightCorrection_flag=0
+StartHeightCorrection_value=130.0
+
+//Углы рассогласования БИНС и динамических осей объекта, в градусах
+//Если задается одно из значений != 0, то в ковариацию по соотвутствующему 
+//параметру будет установлено значение, как если бы было SINS_is_accurateMounted=1
+alpha_kappa_1=0.0
+alpha_kappa_3=0.0
+//alpha_kappa_1=-0.02329
+//alpha_kappa_3=-0.00266
+
+//Значение ошибки масштабного коэффициента (в процентах)
+ScaleError=0.0
+//ScaleError=4.033
