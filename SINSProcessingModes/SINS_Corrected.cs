@@ -224,6 +224,147 @@ namespace SINSProcessingModes
             }
 
 
+            if (SINSstate.DataInFileName == "630 отрезки  19.10.16_19-oct-2016.txt")
+            {
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1350.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                }
+                //if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1800.00) < 0.01)
+                //{
+                //    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                //    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
+                //}
+                //if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 2300.00) < 0.01)
+                //{
+                //    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
+                //    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                //}
+                //if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 2750.00) < 0.01)
+                //{
+                //    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                //    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
+                //}
+            }
+
+            if (SINSstate.DataInFileName == "630 отрезки 18.10.16_18-oct-2016.txt")
+            {
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1370.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1800.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 2300.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 2650.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
+                }
+            }
+
+            if (SINSstate.DataInFileName == "630 отрезки нов прошив 17.10.16_17-oct-2016.txt")
+            {
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1250.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1700.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 2150.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 2600.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
+                }
+            }
+
+            if (SINSstate.DataInFileName == "630 по точкам  19.10.16_19-oct-2016.txt")
+            {
+                //if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 3798.03) < 0.01) // Virtual CP
+                //{
+                //    double Lat =  58 + (6.0 + 50.34 / 60.0) / 60.0;
+                //    double Long = 56 + (25.0 + 33.94 / 60.0) / 60.0;
+                //    double[] PhiLambdaH_WGS84 = GeodesicVsGreenwich.Geodesic2Geodesic(Lat * SimpleData.ToRadian, Long * SimpleData.ToRadian, 187.429, 0);
+                //    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_WGS84[0], PhiLambdaH_WGS84[1], 187.429, SINSstate.Noise_Marker_PositionError);
+                //}
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 4900.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6441129, 10465942);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 170, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 7100.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6431440, 10456655);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 160, SINSstate.Noise_Marker_PositionError);
+                }
+            }
+
+            if (SINSstate.DataInFileName == "630 по точкам 18.10.16_18-oct-2016.txt")
+            {
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 4950.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6441129, 10465942);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 170, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 7350.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6431440, 10456655);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 160, SINSstate.Noise_Marker_PositionError);
+                }
+            }
+
+            if (SINSstate.DataInFileName == "630 по точкам нов прошив 17.10.16_17-oct-2016.txt")
+            {
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 4900.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6441129, 10465942);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 170, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 7300.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6431440, 10456655);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 160, SINSstate.Noise_Marker_PositionError);
+                }
+            }
+            if (SINSstate.DataInFileName == "630 с завода  19.10.16_19-oct-2016.txt")
+            {
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 5000.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
+                }
+            }
+            if (SINSstate.DataInFileName == "630 с завода 18.10.16_18-oct-2016.txt")
+            {
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 5000.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
+                }
+            }
+
+
+
+
+
             if (SINSstate.DataInFileName == "636_ c завода 03.10.16_03-oct-2016,09-17-23.dat.txt")
             {
                 if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 5315.00) < 0.01)

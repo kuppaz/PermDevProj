@@ -11,7 +11,7 @@ frequency=0.01024
 //Начальные координаты
 StartLatitude=58.02253
 StartLongitude=56.78261
-StartHeight=160.0
+StartHeight=176.0
 
 //Длительность выставки в секундах. Здесь вычисляется СКО шумовых составляющих ньютонометров и ДУСов
 AlignmentDuration=430
@@ -23,8 +23,8 @@ AlignmentEngineIsOff=1
 //Режим NoiseParamDetermin_mode = 0 - параметры шумов определяются на интервале выставки
 //Режим NoiseParamDetermin_mode = 1 - параметры шумов определяются на заданном интервале (NoiseParamDetermin_startTime, NoiseParamDetermin_endTime) в секундах
 //Режим NoiseParamDetermin_mode = 2 - параметры шумов задаются явно: NoiseParamDetermin_SigmaValueF (м/сек^2) и NoiseParamDetermin_SigmaValueNu (рад/сек)
-NoiseParamDetermin_mode = 0
-NoiseParamDetermin_startTime = 220
+NoiseParamDetermin_mode = 1
+NoiseParamDetermin_startTime = 300
 NoiseParamDetermin_endTime = 430
 NoiseParamDetermin_SigmaValueF = 0.04
 NoiseParamDetermin_SigmaValueNu = 0.0003
