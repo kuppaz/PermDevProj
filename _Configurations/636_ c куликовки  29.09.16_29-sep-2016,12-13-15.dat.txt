@@ -39,8 +39,8 @@ Alignment_PitchValue=2.20255
 
 //Флаг точно ли установлен БИНС на объекте (откалиброваны ли углы 
 //рассогласования осей БИНС и строительных осей): 1 - точно, 0 - нет
-SINS_is_accurateMounted_by_kappa_1=0
-SINS_is_accurateMounted_by_kappa_3=0
+SINS_is_accurateMounted_by_kappa_1=1
+SINS_is_accurateMounted_by_kappa_3=1
 
 //Коррекция по стартовой высоте первые N метров. Флаг: 
 //1 - включить коррекцию, 0 - не использовать

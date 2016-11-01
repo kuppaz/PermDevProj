@@ -178,29 +178,29 @@ namespace Common_Namespace
 
 
             // --- Шум по горизонтальным ошибкам координат --- //
-            KalmanVars.Noise_Pos = 0.1;
+            KalmanVars.Noise_Pos = 1.0;
             // --- Шум по вертикальным ошибкам координат --- //
-            //KalmanVars.Noise_Pos_Vertical = 0.01;
+            KalmanVars.Noise_Pos_Vertical = 0.01;
             // -------------------------------------------//
 
             // --- определяем мультипликатор для шума вертикального измерения по одометру
-            SINSstate.OdoVerticalNoiseMultiplicator = 1;
+            SINSstate.OdoVerticalNoiseMultiplicator = 2;
 
             // --- Начальные ковариации --- //
             SINSstate.stdR = 0.01; // по ошибке координат БИНС, м
             SINSstate.stdOdoR = 0.01; // по ошибке координат одометрического счисления, м
-            SINSstate.stdV = 0.1;
+            SINSstate.stdV = 0.01;
 
             // --- По флагу Точно ли установлен БИНС на корпусе объекта, определяем соответствующие начальные значения ковариаций
             if (Convert.ToInt32(SINS_is_accurateMounted_by_kappa_1) == 1)
                 SINSstate.stdKappa1 = 2.0;
             else
-                SINSstate.stdKappa1 = 20.0;
+                SINSstate.stdKappa1 = 10.0;
 
             if (Convert.ToInt32(SINS_is_accurateMounted_by_kappa_3) == 1)
                 SINSstate.stdKappa3 = 2.0;
             else
-                SINSstate.stdKappa3 = 20.0;
+                SINSstate.stdKappa3 = 10.0;
 
 
             SINSstate.stdScale = 0.01;

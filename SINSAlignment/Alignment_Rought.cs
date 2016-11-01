@@ -293,7 +293,7 @@ namespace Alignment
                 double decrementNoiseF = 1, decrementNoiseNu = 1;
                 if (SINSstate.AlignmentEngineIsOff == 0)
                 {
-                    decrementNoiseF = 5;
+                    decrementNoiseF = 4;
                     decrementNoiseNu = 7;
                 }
 
