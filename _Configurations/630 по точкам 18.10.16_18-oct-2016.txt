@@ -67,6 +67,6 @@ ScaleError=0.0
 //alpha_kappa_3=0.00013
 //ScaleError=0.090
 // следующие значения получены при использовании всех КТ по текущему заезду (вариант докалибровки)
-//alpha_kappa_1=3.07794
-//alpha_kappa_3=0.06275
-//ScaleError=0.12
+//alpha_kappa_1=3.08055
+//alpha_kappa_3=0.00107
+//ScaleError=0.094

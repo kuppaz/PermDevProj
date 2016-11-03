@@ -216,8 +216,8 @@ namespace SINSProcessingModes
             if (SINSstate.GPS_Data.gps_Latitude.isReady == 1 && SINSstate.GPS_CounterOfPoints % 5 == 0)
             {
                 //double[] PhiLambdaH_WGS84 = GeodesicVsGreenwich.Geodesic2Geodesic(SINSstate.GPS_Data.gps_Latitude.Value, SINSstate.GPS_Data.gps_Longitude.Value, SINSstate.GPS_Data.gps_Altitude.Value, 0);
-                CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod
-                    , SINSstate.GPS_Data.gps_Latitude.Value, SINSstate.GPS_Data.gps_Longitude.Value, SINSstate.GPS_Data.gps_Altitude.Value, SINSstate.Noise_GPS_PositionError);
+                //CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod
+                //    , SINSstate.GPS_Data.gps_Latitude.Value, SINSstate.GPS_Data.gps_Longitude.Value, SINSstate.GPS_Data.gps_Altitude.Value, SINSstate.Noise_GPS_PositionError);
             }
 
             if (SINSstate.DataInFileName == "630 отрезки  19.10.16_19-oct-2016.txt")

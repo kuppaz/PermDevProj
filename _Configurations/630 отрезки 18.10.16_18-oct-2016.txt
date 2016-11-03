@@ -52,9 +52,9 @@ StartHeightCorrection_value=130.0
 //параметру будет установлено значение, как если бы было SINS_is_accurateMounted=1
 alpha_kappa_1=0.0
 alpha_kappa_3=0.0
-//alpha_kappa_1=3.02685
-//alpha_kappa_3=0.001
+//alpha_kappa_1=3.04427
+//alpha_kappa_3=0.0005
 
 //Значение ошибки масштабного коэффициента (в процентах)
 ScaleError=0.0
-//ScaleError=0.102
+//ScaleError=0.089

@@ -9,8 +9,8 @@ filename=630 отрезки нов прошив 17.10.16_17-oct-2016.txt
 frequency=0.01024
 
 //Начальные координаты
-StartLatitude=58.02423619
-StartLongitude=56.784301766
+StartLatitude=58.02252776
+StartLongitude=56.78262723
 StartHeight=176.0
 
 //Длительность выставки в секундах. Здесь вычисляется СКО шумовых составляющих ньютонометров и ДУСов
@@ -52,9 +52,9 @@ StartHeightCorrection_value=130.0
 //параметру будет установлено значение, как если бы было SINS_is_accurateMounted=1
 alpha_kappa_1=0.0
 alpha_kappa_3=0.0
-//alpha_kappa_1=3.06083
-//alpha_kappa_3=0.0021
+//alpha_kappa_1=3.07578
+//alpha_kappa_3=0.0005
 
 //Значение ошибки масштабного коэффициента (в процентах)
 ScaleError=0.0
-//ScaleError=-0.315
+//ScaleError=-0.200
