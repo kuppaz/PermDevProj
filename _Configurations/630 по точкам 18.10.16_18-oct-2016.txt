@@ -40,7 +40,7 @@ Alignment_PitchValue=5.22087
 //Флаг точно ли установлен БИНС на объекте (откалиброваны ли углы 
 //рассогласования осей БИНС и строительных осей): 1 - точно, 0 - нет
 SINS_is_accurateMounted_by_kappa_1=0
-SINS_is_accurateMounted_by_kappa_3=1
+SINS_is_accurateMounted_by_kappa_3=0
 
 //Коррекция по стартовой высоте первые N метров. Флаг: 
 //1 - включить коррекцию, 0 - не использовать
@@ -55,18 +55,18 @@ alpha_kappa_1=0.0
 alpha_kappa_3=0.0
 ScaleError=0.0
 // следующие значения получены при использовании 1 КТ по заезду "отрезки"
-//alpha_kappa_1=3.01791
-//alpha_kappa_3=0.00013
-//ScaleError=0.363
+//alpha_kappa_1=3.01732
+//alpha_kappa_3=0.00023
+//ScaleError=0.132
 // следующие значения получены при использовании 2 КТ по заезду "отрезки"
-//alpha_kappa_1=3.01947
-//alpha_kappa_3=0.00013
-//ScaleError=0.220
+//alpha_kappa_1=3.03359
+//alpha_kappa_3=0.00033
+//ScaleError=0.097
 // следующие значения получены при использовании всех КТ по заезду "отрезки"
-//alpha_kappa_1=3.02926
-//alpha_kappa_3=0.00013
-//ScaleError=0.090
+//alpha_kappa_1=3.04427
+//alpha_kappa_3=0.0005
+//ScaleError=0.089
 // следующие значения получены при использовании всех КТ по текущему заезду (вариант докалибровки)
-//alpha_kappa_1=3.08055
-//alpha_kappa_3=0.00107
-//ScaleError=0.094
+//alpha_kappa_1=3.07814
+//alpha_kappa_3=0.08702
+//ScaleError=0.097

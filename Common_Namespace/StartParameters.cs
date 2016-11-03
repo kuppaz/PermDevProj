@@ -214,13 +214,13 @@ namespace Common_Namespace
             ProcHelp.AltSNS = SINSstate_OdoMod.Height = SINSstate.Altitude_Start = SINSstate.AltSNS = SINSstate.Height = SINSstate.Altitude_prev = Convert.ToDouble(StartHeight);
 
 
-            //--- В случае выставления значения поправки на угол kappa_3 именшаем нач.ковариацию ---//
-            if (Math.Abs(SINSstate.alpha_kappa_3) > 0.00001 * SimpleData.ToRadian)
-                SINSstate.stdKappa3 = 1.0; //минут
+            ////--- В случае выставления значения поправки на угол kappa_3 именшаем нач.ковариацию ---//
+            //if (Math.Abs(SINSstate.alpha_kappa_3) > 0.00001 * SimpleData.ToRadian)
+            //    SINSstate.stdKappa3 = 1.0; //минут
 
-            //--- В случае выставления значения поправки на угол kappa_1 именшаем нач.ковариацию ---//
-            if (Math.Abs(SINSstate.alpha_kappa_1) > 0.00001 * SimpleData.ToRadian)
-                SINSstate.stdKappa1 = 1.0; //минут
+            ////--- В случае выставления значения поправки на угол kappa_1 именшаем нач.ковариацию ---//
+            //if (Math.Abs(SINSstate.alpha_kappa_1) > 0.00001 * SimpleData.ToRadian)
+            //    SINSstate.stdKappa1 = 1.0; //минут
 
             //--- В случае выставления значения поправки на погрешность масштаба именшаем нач.ковариацию ---//
             if (Math.Abs(SINSstate.alpha_scaleError) > 0.00001)
