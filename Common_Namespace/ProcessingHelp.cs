@@ -190,13 +190,14 @@ namespace Common_Namespace
 
                 // --- Фильтруем всплески в показаниях одометра
                 double CurOdoSpeed_s1 = (SINSstate.OdometerData.odometer_left.Value - SINSstate.OdometerLeftPrev) / (SINSstate.OdoTimeStepCount + 1) / SINSstate.timeStep;
-                if (SINSstate.OdometerData.odometer_right.isReady == 1
+                if (SINSstate.OdometerData.odometer_left.isReady == 1
                     && SINSstate.OdoSpeed_s[1] > 1.0
                     && (CurOdoSpeed_s1 - SINSstate.OdoSpeed_s[1]) > 10.0
                     && CurOdoSpeed_s1 > 1.5 * SINSstate.OdoSpeed_s[1])
                 {
-                    SINSstate.OdometerLeftPrev = SINSstate.OdometerData.odometer_left.Value;
-                    SINSstate.OdometerData.odometer_right.isReady = 2;
+                    double timeMark = SINSstate.Time + SINSstate.Time_Alignment;
+                    SINSstate.OdometerLeftPrev = SINSstate.OdometerData.odometer_left.Value - SINSstate.OdometerVector[1];
+                    SINSstate.OdometerData.odometer_left.isReady = 2;
                     SINSstate.OdometerData.odometer_right.isReady = 2;
                 }
 

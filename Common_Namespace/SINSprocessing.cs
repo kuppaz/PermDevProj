@@ -306,16 +306,14 @@ namespace Common_Namespace
 
             double Noise_Pos = KalmanVars.Noise_Pos, Noise_Pos_Vertical = KalmanVars.Noise_Pos_Vertical;
 
-            if (Math.Abs(SimpleOperations.AbsoluteVectorValue(SINSstate.Vx_0)) < 1.0)
+            if (Math.Abs(SimpleOperations.AbsoluteVectorValue(SINSstate.Vx_0)) < 0.2)
             {
-                sqrt_freq = 1.0;
+                //sqrt_freq = 1.0;
                 sqrt_freq_vert = 1.0;
                 Noise_Pos = 0.1;
                 Noise_Pos_Vertical = 0.0;
             }
 
-            //sqrt_freq = 1.0;
-            //sqrt_freq_vert = 1.0;
 
             double[] Noise_Vel_in_Mx = new double[3], Noise_Angl_in_Mx = new double[3];
 
@@ -351,9 +349,9 @@ namespace Common_Namespace
             KalmanVars.CovarianceMatrixNoise[(iMx_r12_odo + 0) * iMq + iMx_r12_odo + 0] = Noise_Pos * sqrt_freq;
             KalmanVars.CovarianceMatrixNoise[(iMx_r12_odo + 1) * iMq + iMx_r12_odo + 1] = Noise_Pos * sqrt_freq;
 
-            //KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 0) * iMq + iMx_Nu0 + 0] = 0.0001 * SimpleData.ToRadian / 3600.0;
-            //KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 1) * iMq + iMx_Nu0 + 1] = 0.0001 * SimpleData.ToRadian / 3600.0;
-            //KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 2) * iMq + iMx_Nu0 + 2] = 0.0001 * SimpleData.ToRadian / 3600.0;
+            //KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 0) * iMq + iMx_Nu0 + 0] = 0.001 * SimpleData.ToRadian / 3600.0;
+            //KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 1) * iMq + iMx_Nu0 + 1] = 0.001 * SimpleData.ToRadian / 3600.0;
+            //KalmanVars.CovarianceMatrixNoise[(iMx_Nu0 + 2) * iMq + iMx_Nu0 + 2] = 0.001 * SimpleData.ToRadian / 3600.0;
 
             //SimpleOperations.PrintMatrixToFile(KalmanVars.CovarianceMatrixS_m, SimpleData.iMx, SimpleData.iMx, "CovarianceMatrixNoise");
 

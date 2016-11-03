@@ -30,7 +30,7 @@ namespace Common_Namespace
             double longOdoIncrement_dt = SINSstate.Time + SINSstate.Time_Alignment - SINSstate.OdometerLeft_ArrayOfPrevTime[Math.Min(20, SINSstate.OdometerLeft_ArrayOfPrev.Length)];
 
             if (longOdoIncrement / longOdoIncrement_dt == 0.0)
-                Noize = 0.001;
+                Noize = 0.01;
 
 
             //---Разбиение на три составляющие---

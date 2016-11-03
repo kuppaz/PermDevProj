@@ -75,9 +75,6 @@ namespace SINSProcessingModes
                     SINSstate.OdometerVector[1] = SINSstate.OdometerData.odometer_left.Value - SINSstate.OdometerLeftPrev;
                     SINSstate.OdoSpeed_s[1] = SINSstate.OdometerVector[1] / SINSstate.OdoTimeStepCount / SINSstate.timeStep;
 
-                    if (SINSstate.OdometerVector[1] > 0)
-                        SINSstate.OdometerVector[1] = SINSstate.OdometerVector[1];
-
                     //--- Берем оценку kappa_1 с вертикального канала ---//
                     if (SINSstate.Vertical_kappa1 > 0)
                         SINSstate.Cumulative_KappaEst[0] = SINSstate.Vertical_Cumulative_KalmanErrorVector[SINSstate.Vertical_kappa1];
@@ -245,6 +242,11 @@ namespace SINSProcessingModes
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
                 }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 3215.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                }
             }
 
             if (SINSstate.DataInFileName == "630 отрезки 18.10.16_18-oct-2016.txt")
@@ -269,6 +271,11 @@ namespace SINSProcessingModes
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
                 }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 3080.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                }
             }
 
             if (SINSstate.DataInFileName == "630 отрезки нов прошив 17.10.16_17-oct-2016.txt")
@@ -292,6 +299,11 @@ namespace SINSProcessingModes
                 {
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
+                }
+                if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 3000.00) < 0.01)
+                {
+                    double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
+                    CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
                 }
             }
 

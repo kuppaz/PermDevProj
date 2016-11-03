@@ -193,12 +193,12 @@ namespace Common_Namespace
 
             // --- По флагу Точно ли установлен БИНС на корпусе объекта, определяем соответствующие начальные значения ковариаций
             if (Convert.ToInt32(SINS_is_accurateMounted_by_kappa_1) == 1)
-                SINSstate.stdKappa1 = 2.0;
+                SINSstate.stdKappa1 = 1.0;
             else
                 SINSstate.stdKappa1 = 10.0;
 
             if (Convert.ToInt32(SINS_is_accurateMounted_by_kappa_3) == 1)
-                SINSstate.stdKappa3 = 2.0;
+                SINSstate.stdKappa3 = 1.0;
             else
                 SINSstate.stdKappa3 = 10.0;
 
@@ -215,12 +215,12 @@ namespace Common_Namespace
 
 
             //--- В случае выставления значения поправки на угол kappa_3 именшаем нач.ковариацию ---//
-            if (Math.Abs(SINSstate.alpha_kappa_3) > 0.0001 * SimpleData.ToRadian)
-                SINSstate.stdKappa3 = 2.0; //минут
+            if (Math.Abs(SINSstate.alpha_kappa_3) > 0.00001 * SimpleData.ToRadian)
+                SINSstate.stdKappa3 = 1.0; //минут
 
             //--- В случае выставления значения поправки на угол kappa_1 именшаем нач.ковариацию ---//
-            if (Math.Abs(SINSstate.alpha_kappa_1) > 0.0001 * SimpleData.ToRadian)
-                SINSstate.stdKappa1 = 2.0; //минут
+            if (Math.Abs(SINSstate.alpha_kappa_1) > 0.00001 * SimpleData.ToRadian)
+                SINSstate.stdKappa1 = 1.0; //минут
 
             //--- В случае выставления значения поправки на погрешность масштаба именшаем нач.ковариацию ---//
             if (Math.Abs(SINSstate.alpha_scaleError) > 0.00001)
