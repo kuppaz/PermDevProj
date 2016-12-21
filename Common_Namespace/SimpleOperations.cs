@@ -357,6 +357,25 @@ namespace Common_Namespace
             PrintMatrix.Close();
         }
 
+        public static void PrintMatrixToFile_TinyToZero(double[] Matrix, int dim_str, int dim_colls, string nameFile)
+        {
+            StreamWriter PrintMatrix = new StreamWriter(SimpleData.PathOutputString + "\\PrintMatrix_" + nameFile + ".txt");
+            for (int j = 0; j < dim_str; j++)
+            {
+                string str_odo = null;
+                for (int i = 0; i < dim_colls; i++)
+                {
+                    double tmp = Matrix[j * dim_colls + i];
+                    if (Math.Abs(Matrix[j * dim_colls + i]) < 1E-4)
+                        tmp = 0.0;
+                    str_odo = str_odo + " " + tmp.ToString();
+                }
+
+                PrintMatrix.WriteLine(str_odo);
+            }
+            PrintMatrix.Close();
+        }
+
         public static void PrintVectorToFile(double[] Vector, int dim)
         {
             StreamWriter PrintVector = new StreamWriter(SimpleData.PathOutputString + "\\PrintVector.txt");

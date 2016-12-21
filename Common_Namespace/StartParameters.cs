@@ -38,6 +38,8 @@ namespace Common_Namespace
                 , SINS_is_accurateMounted_by_kappa_1 = "0"
                 , SINS_is_accurateMounted_by_kappa_3 = "0"
                 , SINS_is_accurateMounted_by_scaleError = "0"
+                , initError_kappa_1 = "0", initError_kappa_3 = "0", initError_ScaleError = "0"
+                , CalibrationStartMode = "0"
                 ;
 
             string AlignmentEngineIsOff = "1";
@@ -123,6 +125,18 @@ namespace Common_Namespace
 
                     if (tmpstr[0].Trim() == "ScaleError")
                         ScaleError = tmpstr[1];
+
+                    if (tmpstr[0].Trim() == "initError_kappa_1")
+                        initError_kappa_1 = tmpstr[1];
+
+                    if (tmpstr[0].Trim() == "initError_kappa_3")
+                        initError_kappa_3 = tmpstr[1];
+
+                    if (tmpstr[0].Trim() == "initError_ScaleError")
+                        initError_ScaleError = tmpstr[1];
+
+                    if (tmpstr[0].Trim() == "CalibrationStartMode")
+                        CalibrationStartMode = tmpstr[1];
                 }
             }
 
@@ -170,11 +184,23 @@ namespace Common_Namespace
                 SINSstate.first_N_meters_StartHeightCorrection_flag = false;
             SINSstate.first_N_meters_StartHeightCorrection_value = Convert.ToDouble(StartHeightCorrection_value);
 
+            if (Convert.ToInt32(CalibrationStartMode) == 1)
+                SINSstate.CalibrationStartMode = true;
+
 
             // --- Углы рассогласования осей БИНС и динамических осей объекта, если это нужно --- //
             SINSstate.alpha_kappa_3 = Convert.ToDouble(alpha_kappa_3) * SimpleData.ToRadian; // -- Угол рассогласования по курсу
             SINSstate.alpha_kappa_1 = Convert.ToDouble(alpha_kappa_1) * SimpleData.ToRadian; // -- Угол рассогласования по тангажу
             SINSstate.alpha_scaleError = Convert.ToDouble(ScaleError) / 100.0;
+
+            {
+                SINSstate.initError_kappa_3 = Convert.ToDouble(initError_kappa_3) * SimpleData.ToRadian; // -- Специальная введенная ошибка по курсу
+                SINSstate.initError_kappa_1 = Convert.ToDouble(initError_kappa_1) * SimpleData.ToRadian; // -- Специальная введенная ошибка по тангажу
+                SINSstate.initError_scaleError = Convert.ToDouble(initError_ScaleError) / 100.0;
+
+                //SINSstate.Alignment_HeadingValue += SINSstate.initError_kappa_3;
+                //SINSstate.Alignment_PitchValue -= SINSstate.initError_kappa_1;
+            }
 
 
             // --- Шум по горизонтальным ошибкам координат --- //
@@ -205,13 +231,24 @@ namespace Common_Namespace
 
             SINSstate.stdScale = 0.01;
 
-            SINSstate.Noise_Marker_PositionError = 0.1; // в метрах
+            SINSstate.Noise_Marker_PositionError = 0.01; // в метрах
             SINSstate.Noise_GPS_PositionError = 2.0; // в метрах
+            KalmanVars.OdoNoise_STOP = 0.1;
 
             // --- Начальные координаты --- //
             ProcHelp.LongSNS = SINSstate_OdoMod.Longitude = SINSstate.Longitude_Start = SINSstate.LongSNS = SINSstate.Longitude = Convert.ToDouble(StartLongitude) * SimpleData.ToRadian;
             ProcHelp.LatSNS = SINSstate_OdoMod.Latitude = SINSstate.Latitude_Start = SINSstate.LatSNS = SINSstate.Latitude = Convert.ToDouble(StartLatitude) * SimpleData.ToRadian;
             ProcHelp.AltSNS = SINSstate_OdoMod.Height = SINSstate.Altitude_Start = SINSstate.AltSNS = SINSstate.Height = SINSstate.Altitude_prev = Convert.ToDouble(StartHeight);
+
+
+            //--- Если запуск производится в режиме калибровочки, то меняем начальные ковариации
+            if (SINSstate.CalibrationStartMode && !(SINSstate.alpha_kappa_3 != 0 || SINSstate.alpha_kappa_1 != 0 || SINSstate.alpha_scaleError != 0))
+            {
+                //KalmanVars.Noise_Pos = 0.1;
+                SINSstate.stdKappa1 = 60.0;
+                SINSstate.stdKappa3 = 60.0;
+                SINSstate.stdScale = 0.02;
+            }
 
 
             ////--- В случае выставления значения поправки на угол kappa_3 именшаем нач.ковариацию ---//
@@ -225,6 +262,7 @@ namespace Common_Namespace
             //--- В случае выставления значения поправки на погрешность масштаба именшаем нач.ковариацию ---//
             if (Math.Abs(SINSstate.alpha_scaleError) > 0.00001)
                 SINSstate.stdScale = 0.001;
+
 
 
             ProcHelp.LongSNS = ProcHelp.LongSNS * 180 / Math.PI;

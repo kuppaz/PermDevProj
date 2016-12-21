@@ -35,6 +35,8 @@ namespace Common_Namespace
             SimpleOperations.NullingOfArray(KalmanVars.KalmanFactor);
             SimpleOperations.NullingOfArray(KalmanVars.StringOfMeasure);
 
+            //SimpleOperations.PrintMatrixToFile_TinyToZero(KalmanVars.CovarianceMatrixS_m, SimpleData.iMx, SimpleData.iMx, "CovarianceMatrixS_m");
+
             // --- Запускается коррекция по циклу по одной строке из матрицы H
             unsafe
             {

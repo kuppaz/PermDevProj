@@ -88,6 +88,21 @@ namespace Common_Namespace
                     SimpleOperations.CopyArray(SINSstate.W_z, Wz);
                 }
 
+                //{
+                //    double[] fz = new double[3], Wz = new double[3];
+
+                //    fz[0] = SINSstate.F_z[0] - SINSstate.initError_kappa_3 * SINSstate.F_z[1];
+                //    fz[1] = SINSstate.F_z[1] + SINSstate.initError_kappa_3 * SINSstate.F_z[0] - SINSstate.initError_kappa_1 * SINSstate.F_z[2];
+                //    fz[2] = SINSstate.F_z[2] + SINSstate.initError_kappa_1 * SINSstate.F_z[1];
+
+                //    Wz[0] = SINSstate.W_z[0] - SINSstate.initError_kappa_3 * SINSstate.W_z[1];
+                //    Wz[1] = SINSstate.W_z[1] + SINSstate.initError_kappa_3 * SINSstate.W_z[0] - SINSstate.initError_kappa_1 * SINSstate.W_z[2];
+                //    Wz[2] = SINSstate.W_z[2] + SINSstate.initError_kappa_1 * SINSstate.W_z[1];
+
+                //    SimpleOperations.CopyArray(SINSstate.F_z, fz);
+                //    SimpleOperations.CopyArray(SINSstate.W_z, Wz);
+                //}
+
 
                 //---Запоминаем координаты предыдущей контрольной точки
                 if (SINSstate.GPS_Data.gps_Latitude.isReady == 1)
@@ -127,20 +142,20 @@ namespace Common_Namespace
 
                 // --- Обрабатываем ситуацию, когда одометр установлен неправильно и не введен масштабный коэффициент
                 double Odo_SINS_VS_distance_coefficient = SINSstate.OdometerData.odometer_left.Value / SINSstate.distance_by_SINS;
-                if (SINSstate.distance_by_SINS < 110.0 && Math.Abs(Odo_SINS_VS_distance_coefficient) > 0.2)
-                {
-                    if (SINSstate.distance_by_SINS > 5.0 && Odo_SINS_VS_distance_coefficient < 0)
-                    {
-                        SINSstate.OdometerData_Sign = -1;
-                        SINSstate.OdometerLeftPrev *= SINSstate.OdometerData_Sign;
-                    }
-                    if (SINSstate.distance_by_SINS > 100.0 && SINSstate.OdometerData_RoughtScale_flag == 0 && Math.Abs(1 - Odo_SINS_VS_distance_coefficient) > 0.3)
-                    {
-                        SINSstate.OdometerData_RoughtScale = Odo_SINS_VS_distance_coefficient;
-                        SINSstate.OdometerLeftPrev /= SINSstate.OdometerData_RoughtScale;
-                        SINSstate.OdometerData_RoughtScale_flag = 1;
-                    }
-                }
+                //if (SINSstate.distance_by_SINS < 110.0 && Math.Abs(Odo_SINS_VS_distance_coefficient) > 0.2)
+                //{
+                //    if (SINSstate.distance_by_SINS > 5.0 && Odo_SINS_VS_distance_coefficient < 0)
+                //    {
+                //        SINSstate.OdometerData_Sign = -1;
+                //        SINSstate.OdometerLeftPrev *= SINSstate.OdometerData_Sign;
+                //    }
+                //    if (SINSstate.distance_by_SINS > 100.0 && SINSstate.OdometerData_RoughtScale_flag == 0 && Math.Abs(1 - Odo_SINS_VS_distance_coefficient) > 0.3)
+                //    {
+                //        SINSstate.OdometerData_RoughtScale = Odo_SINS_VS_distance_coefficient;
+                //        SINSstate.OdometerLeftPrev /= SINSstate.OdometerData_RoughtScale;
+                //        SINSstate.OdometerData_RoughtScale_flag = 1;
+                //    }
+                //}
 
                 // --- Считываем показания одометров
                 SINSstate.OdometerData.odometer_left.Value = (Convert.ToDouble(dataArray2[18]) - SINSstate.OdometerData.odometer_left.Value_Correction) * SINSstate.OdometerData_Sign / SINSstate.OdometerData_RoughtScale;
@@ -376,6 +391,9 @@ namespace Common_Namespace
                                     + " " + SINSstate.GPS_Data.gps_Latitude_pnppk_sol.Value * SimpleData.ToDegree
                                     + " " + SINSstate.GPS_Data.gps_Longitude_pnppk_sol.Value * SimpleData.ToDegree
                                     + " " + SINSstate.GPS_Data.gps_Altitude_pnppk_sol.Value
+
+                                    + " " + SINSstate_OdoMod.OdoSpeed_s[1] + " " + ((SINSstate_OdoMod.Latitude) * SimpleData.ToDegree) + " " + ((SINSstate_OdoMod.Longitude) * SimpleData.ToDegree)
+                                    + " " + SINSstate.OdometerData.odometer_left.Value
                                     ;
 
                 Nav_FeedbackSolution.WriteLine(ProcHelp.datastring);
@@ -448,7 +466,8 @@ namespace Common_Namespace
                 if (iMx_kappa_3_ds > 0)
                     ProcHelp.datastring = ProcHelp.datastring
                         + " " + SINSstate.Cumulative_KalmanErrorVector[iMx_kappa_3_ds + 0] * SimpleData.ToDegree
-                        + " " + SINSstate.Cumulative_KalmanErrorVector[iMx_kappa_3_ds + 1];
+                        + " " + SINSstate.Cumulative_KalmanErrorVector[iMx_kappa_3_ds + 1]
+                        + " " + (SINSstate.Cumulative_KalmanErrorVector[(iMx_alphaBeta + 2)] - SINSstate.Cumulative_KalmanErrorVector[iMx_kappa_3_ds + 0]) * SimpleData.ToDegree;
                 else
                     ProcHelp.datastring = ProcHelp.datastring + " 0 0";
 

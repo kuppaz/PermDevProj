@@ -40,6 +40,8 @@ namespace Common_Namespace
                     SINSstate.OdometerLeft_ArrayOfPrevTime[0] = SINSstate.Time + SINSstate.Time_Alignment;
                 }
             }
+
+            SINSstate.CalibrationFirstCP_prev = SINSstate.CalibrationFirstCP;
         }
 
 
@@ -450,23 +452,23 @@ namespace Common_Namespace
             /*-----------Компоненты при ошибках одометрического счисления----------------*/
 
             // --- блок по горизонтальным ошибкам одометрического счисления
-            KalmanVars.Matrix_A[(iMx_r12_odo + 0) * iMx + (iMx_alphaBeta + 2)] = SINSstate_OdoMod.Vx_0[1];
-            KalmanVars.Matrix_A[(iMx_r12_odo + 0) * iMx + iMx_r12_odo + 1] = SINSstate_OdoMod.Omega_x[2];
+            if (SINSstate.CalibrationFirstCP != 0)
+            {
+                KalmanVars.Matrix_A[(iMx_r12_odo + 0) * iMx + (iMx_alphaBeta + 2)] = SINSstate_OdoMod.Vx_0[1];
+                KalmanVars.Matrix_A[(iMx_r12_odo + 0) * iMx + iMx_r12_odo + 1] = SINSstate_OdoMod.Omega_x[2];
+
+                KalmanVars.Matrix_A[(iMx_r12_odo + 1) * iMx + (iMx_alphaBeta + 2)] = -SINSstate_OdoMod.Vx_0[0];
+                KalmanVars.Matrix_A[(iMx_r12_odo + 1) * iMx + iMx_r12_odo + 0] = -SINSstate_OdoMod.Omega_x[2];
+            }
+
             if (iMx_kappa_3_ds > 0)
             {
                 KalmanVars.Matrix_A[(iMx_r12_odo + 0) * iMx + iMx_kappa_3_ds + 0] = -SINSstate_OdoMod.OdoSpeed_s[1] * SINSstate_OdoMod.A_x0s[0, 0] + SINSstate_OdoMod.OdoSpeed_s[0] * SINSstate_OdoMod.A_x0s[0, 1];
                 KalmanVars.Matrix_A[(iMx_r12_odo + 0) * iMx + iMx_kappa_3_ds + 1] = SINSstate_OdoMod.OdoSpeed_x0[0];
-            }
 
-            KalmanVars.Matrix_A[(iMx_r12_odo + 1) * iMx + (iMx_alphaBeta + 2)] = -SINSstate_OdoMod.Vx_0[0];
-            KalmanVars.Matrix_A[(iMx_r12_odo + 1) * iMx + iMx_r12_odo + 0] = -SINSstate_OdoMod.Omega_x[2];
-            if (iMx_kappa_3_ds > 0)
-            {
                 KalmanVars.Matrix_A[(iMx_r12_odo + 1) * iMx + iMx_kappa_3_ds + 0] = -SINSstate_OdoMod.OdoSpeed_s[1] * SINSstate_OdoMod.A_x0s[1, 0] + SINSstate_OdoMod.OdoSpeed_s[0] * SINSstate_OdoMod.A_x0s[1, 1];
                 KalmanVars.Matrix_A[(iMx_r12_odo + 1) * iMx + iMx_kappa_3_ds + 1] = SINSstate_OdoMod.OdoSpeed_x0[1];
             }
-
-
 
 
             // ----------------------------------------------------------//

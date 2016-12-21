@@ -125,10 +125,6 @@ namespace Motion_Processing
             // ---------- dR ----------//
             iMx = SimpleData.iMx += 2;
 
-            // ---------- dR_ODO_12 ----------//
-            value_iMx_r_odo_12 = SimpleData.iMx;
-            iMx = SimpleData.iMx += 2;
-
             // ---------- dV_12 ----------//
             value_iMx_dV_12 = SimpleData.iMx;
             iMx = SimpleData.iMx += 2;
@@ -148,6 +144,10 @@ namespace Motion_Processing
             // ---------- f0_3 ----------//
             value_iMx_f0_3 = SimpleData.iMx;
             iMx = SimpleData.iMx += 1;
+
+            // ---------- dR_ODO_12 ----------//
+            value_iMx_r_odo_12 = SimpleData.iMx;
+            iMx = SimpleData.iMx += 2;
 
             // ---------- kappa_3 and Scale Error ----------//
             if (this.noOdoModelEstimate.Checked == false)

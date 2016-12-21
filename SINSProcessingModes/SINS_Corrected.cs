@@ -79,6 +79,19 @@ namespace SINSProcessingModes
                     if (SINSstate.Vertical_kappa1 > 0)
                         SINSstate.Cumulative_KappaEst[0] = SINSstate.Vertical_Cumulative_KalmanErrorVector[SINSstate.Vertical_kappa1];
 
+                    /*Поворачиваем на моделируюемую ошибку*/
+                    if (SINSstate.initError_kappa_1 != 0 || SINSstate.initError_kappa_3 != 0 || SINSstate.initError_scaleError != 0)
+                    {
+                        double[] initError_kappa = new double[3];
+                        initError_kappa[0] = -SINSstate.initError_kappa_1;
+                        initError_kappa[2] = SINSstate.initError_kappa_3;
+
+                        SimpleOperations.CopyArray(SINSstate.OdoSpeed_s,
+                            (Matrix.UnitMatrix(3) + Matrix.SkewSymmetricMatrix(initError_kappa)) / (1.0 - SINSstate.initError_scaleError) * SINSstate.OdoSpeed_s);
+                        SimpleOperations.CopyArray(SINSstate.OdometerVector,
+                            (Matrix.UnitMatrix(3) + Matrix.SkewSymmetricMatrix(initError_kappa)) / (1.0 - SINSstate.initError_scaleError) * SINSstate.OdometerVector);
+                    }
+
                     //--- Корректируем обновление данных с одометра по оценкам ошибок (обратные связи) ---//
                     SimpleOperations.CopyArray(SINSstate.OdoSpeed_s,
                         (Matrix.UnitMatrix(3) + Matrix.SkewSymmetricMatrix(SINSstate.Cumulative_KappaEst)) / (1.0 + SINSstate.Cumulative_KappaEst[1]) * SINSstate.OdoSpeed_s);
@@ -142,12 +155,55 @@ namespace SINSProcessingModes
                 if (SINSstate.flag_AutonomouseSolution == true)
                     SINSstate.flag_UsingCorrection = false;
 
+
+
+                bool flag_UsingCorrection_tmp = SINSstate.flag_UsingCorrection, flag_KNS = false;
+                int odometer_left_isReady_tmp = SINSstate.OdometerData.odometer_left.isReady;
+                if ((SINSstate.CalibrationFirstCP == 0 || SINSstate.CalibrationFirstCP_prev == 0) && SINSstate.OdometerData.odometer_left.Value > 0)
+                {
+                    if (SINSstate.CalibrationFirstCP == 0)
+                        SINSstate.flag_UsingCorrection = false;
+
+                    if (SINSstate.CalibrationFirstCP_prev == 0)
+                        SINSstate.OdometerData.odometer_left.isReady = 2;
+
+                    KalmanVars.Noise_Pos = 0.1;
+                }
+                else if (SINSstate.OdometerData.odometer_left.Value == 0)
+                {
+                    flag_KNS = true;
+                    CorrectionModel.Make_H_KNS(KalmanVars, SINSstate, SINSstate_OdoMod);
+
+                    if (SINSstate.CalibrationFirstCP == 0)
+                        SINSstate.flag_UsingCorrection = false;
+                }
+                if (SINSstate.CalibrationFirstCP == 1 && SINSstate.CalibrationFirstCP_prev > 0)
+                {
+                    SINSstate.CalibrationFirstCP++;
+
+                    KalmanVars.Noise_Pos = 1.0;
+
+                    KalmanVars.CovarianceMatrixS_m[(SINSstate.value_iMx_kappa_3_ds + 0) * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 0)]
+                        = KalmanVars.CovarianceMatrixS_p[(SINSstate.value_iMx_kappa_3_ds + 0) * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 0)] = 10.0 * SimpleData.ToRadian_min;
+                    KalmanVars.CovarianceMatrixS_m[(SINSstate.value_iMx_kappa_3_ds + 1) * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 1)]
+                        = KalmanVars.CovarianceMatrixS_p[(SINSstate.value_iMx_kappa_3_ds + 1) * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 1)] = 0.005;
+
+                    KalmanVars.Vertical_CovarianceMatrixS_m[SINSstate.Vertical_kappa1 * SimpleData.iMx_Vertical + SINSstate.Vertical_kappa1]
+                    = KalmanVars.Vertical_CovarianceMatrixS_p[SINSstate.Vertical_kappa1 * SimpleData.iMx_Vertical + SINSstate.Vertical_kappa1] = 10.0 * SimpleData.ToRadian_min;
+                }
+
+                if (i % 50 == 0)
+                {
+                    SimpleOperations.PrintMatrixToFile_TinyToZero(KalmanVars.CovarianceMatrixS_m, SimpleData.iMx, SimpleData.iMx, "CovarianceMatrixS_m");
+                    SimpleOperations.PrintMatrixToFile_TinyToZero(KalmanVars.Matrix_A, SimpleData.iMx, SimpleData.iMx, "Matrix_A");
+                }
+
                 //---------------------------------------------------------------------//
                 ProcHelp.corrected = 0;
-                if (SINSstate.flag_UsingCorrection == true)
+                if (SINSstate.flag_UsingCorrection == true || flag_KNS)
                 {
                     //=== КОРРЕКЦИЯ В СЛУЧАЕ БИНС+ ОДОМЕТР - формируются соответствующие корректирующие измерения по разности координат БИНС и одометрического счисления ===//
-                    if (SINSstate.OdometerData.odometer_left.isReady == 1)
+                    if (SINSstate.OdometerData.odometer_left.isReady == 1 && !flag_KNS)
                         CorrectionModel.Make_H_POSITION(KalmanVars, SINSstate, SINSstate_OdoMod, ProcHelp);
 
                     // --- Этап коррекции фильтра
@@ -158,7 +214,7 @@ namespace SINSProcessingModes
 
 
                 //--- Расчет корректирующего вектора состояния ---//
-                if (SINSstate.flag_UsingCorrection == true)
+                if (SINSstate.flag_UsingCorrection == true || flag_KNS)
                 {
                     // --- Вычисление поправок в БОЛЬШОМ к параметрам состояния системы 
                     SINSprocessing.CalcStateErrors(KalmanVars.ErrorConditionVector_p, SINSstate, SINSstate_OdoMod, KalmanVars);
@@ -182,8 +238,15 @@ namespace SINSProcessingModes
                         + ",  Vx_1=" + Math.Round(SINSstate.Vx_0[0], 2) + ",  Vx_2=" + Math.Round(SINSstate.Vx_0[1], 3));
 
                 //--- РЕСТАРТ вектора состояния уравнений ошибок только если имел место шаг коррекции ---//
-                if (SINSstate.flag_UsingCorrection == true)
+                if (SINSstate.flag_UsingCorrection == true || flag_KNS)
                     SINSprocessing.NullingOfCorrectedErrors(SINSstate, KalmanVars);
+
+
+                if (SINSstate.CalibrationFirstCP == 0)
+                    SINSstate.flag_UsingCorrection = flag_UsingCorrection_tmp;
+                if (SINSstate.CalibrationFirstCP_prev == 0)
+                    SINSstate.OdometerData.odometer_left.isReady = odometer_left_isReady_tmp;
+
 
                 //--- Переопределение значений данных одометра ---
                 SINSprocessing.Redifinition_OdoCounts(SINSstate, SINSstate_OdoMod);
@@ -224,6 +287,7 @@ namespace SINSProcessingModes
             {
                 if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1350.00) < 0.01)
                 {
+                    SINSstate.CalibrationFirstCP=1;
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
                 }

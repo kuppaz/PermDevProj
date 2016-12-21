@@ -181,14 +181,15 @@ namespace Common_Namespace
         public double[] tempVect = new double[3];
         public double[] GK_Latitude = new double[50];
         public double[] GK_Longitude = new double[50];
-        public double alpha_kappa_1, alpha_kappa_3, alpha_scaleError, DirectionalAngle;
+        public double alpha_kappa_1, alpha_kappa_3, alpha_scaleError, DirectionalAngle, initError_kappa_1, initError_kappa_3, initError_scaleError;
 
         public bool flag_AutonomouseSolution, flag_noOdoModelEstimate, flag_AccuracyClass_0_02grph, flag_AccuracyClass_0_2_grph;
 
         public double odotime_cur, odotime_prev;
         public bool flag_ControlPointCorrection;
         public double NumberOfFilesForSmoothing;
-        public int GPS_CounterOfPoints = 0;
+        public int GPS_CounterOfPoints = 0, GPS_CounterOfPoints_prev = 0;
+        public int CalibrationFirstCP = 0, CalibrationFirstCP_prev = 0;
 
         public bool flag_true_Marker = false;
         public int MarkersInputCount = 0, MarkerNumberLastUsed = 0;
@@ -234,6 +235,8 @@ namespace Common_Namespace
         public int NoiseParamDetermin_mode, NoiseParamDetermin_startTime, NoiseParamDetermin_endTime;
         public double NoiseParamDetermin_SigmaValueF, NoiseParamDetermin_SigmaValueNu;
         public int AlignmentEngineIsOff;
+
+        public bool CalibrationStartMode = false;
 
         public int forDriftMeasureWsAvg_cnt;
         public double[] forDriftMeasureWsAvg = new double[3];
