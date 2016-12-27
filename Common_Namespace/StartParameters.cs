@@ -197,9 +197,6 @@ namespace Common_Namespace
                 SINSstate.initError_kappa_3 = Convert.ToDouble(initError_kappa_3) * SimpleData.ToRadian; // -- Специальная введенная ошибка по курсу
                 SINSstate.initError_kappa_1 = Convert.ToDouble(initError_kappa_1) * SimpleData.ToRadian; // -- Специальная введенная ошибка по тангажу
                 SINSstate.initError_scaleError = Convert.ToDouble(initError_ScaleError) / 100.0;
-
-                //SINSstate.Alignment_HeadingValue += SINSstate.initError_kappa_3;
-                //SINSstate.Alignment_PitchValue -= SINSstate.initError_kappa_1;
             }
 
 
@@ -241,16 +238,6 @@ namespace Common_Namespace
             ProcHelp.AltSNS = SINSstate_OdoMod.Height = SINSstate.Altitude_Start = SINSstate.AltSNS = SINSstate.Height = SINSstate.Altitude_prev = Convert.ToDouble(StartHeight);
 
 
-            //--- Если запуск производится в режиме калибровочки, то меняем начальные ковариации
-            if (SINSstate.CalibrationStartMode && !(SINSstate.alpha_kappa_3 != 0 || SINSstate.alpha_kappa_1 != 0 || SINSstate.alpha_scaleError != 0))
-            {
-                //KalmanVars.Noise_Pos = 0.1;
-                SINSstate.stdKappa1 = 60.0;
-                SINSstate.stdKappa3 = 60.0;
-                SINSstate.stdScale = 0.02;
-            }
-
-
             ////--- В случае выставления значения поправки на угол kappa_3 именшаем нач.ковариацию ---//
             //if (Math.Abs(SINSstate.alpha_kappa_3) > 0.00001 * SimpleData.ToRadian)
             //    SINSstate.stdKappa3 = 1.0; //минут
@@ -262,6 +249,21 @@ namespace Common_Namespace
             //--- В случае выставления значения поправки на погрешность масштаба именшаем нач.ковариацию ---//
             if (Math.Abs(SINSstate.alpha_scaleError) > 0.00001)
                 SINSstate.stdScale = 0.001;
+
+
+            //--- Если запуск производится в режиме калибровочки, то меняем начальные ковариации
+            if (SINSstate.CalibrationStartMode && !(SINSstate.alpha_kappa_3 != 0 || SINSstate.alpha_kappa_1 != 0 || SINSstate.alpha_scaleError != 0))
+            {
+                //KalmanVars.Noise_Pos = 0.1;
+                if (SINSstate.alpha_kappa_1 != 0)
+                    SINSstate.stdKappa1 = 60.0;
+
+                if (SINSstate.alpha_kappa_3 != 0)
+                    SINSstate.stdKappa3 = 60.0;
+
+                if (SINSstate.alpha_scaleError != 0)
+                    SINSstate.stdScale = 0.02;
+            }
 
 
 

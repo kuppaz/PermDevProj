@@ -337,11 +337,11 @@ namespace Alignment
 
             // --- Если заданы начальные углы в настройках, то берем их с поправками на углы докалибровки ---//
             if (SINSstate.Alignment_HeadingDetermined == true)
-                SINSstate.Heading = SINSstate.Alignment_HeadingValue + SINSstate.alpha_kappa_3;
+                SINSstate.Heading = SINSstate.Alignment_HeadingValue + SINSstate.alpha_kappa_3 - SINSstate.initError_kappa_3;
             if (SINSstate.Alignment_RollDetermined == true)
                 SINSstate.Roll = SINSstate.Alignment_RollValue;
             if (SINSstate.Alignment_PitchDetermined == true)
-                SINSstate.Pitch = SINSstate.Alignment_PitchValue - SINSstate.alpha_kappa_1;
+                SINSstate.Pitch = SINSstate.Alignment_PitchValue - SINSstate.alpha_kappa_1 + SINSstate.initError_kappa_1;
 
 
 

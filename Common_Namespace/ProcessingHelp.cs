@@ -88,20 +88,22 @@ namespace Common_Namespace
                     SimpleOperations.CopyArray(SINSstate.W_z, Wz);
                 }
 
-                //{
-                //    double[] fz = new double[3], Wz = new double[3];
+                /*Поворачиваем на моделируюемую ошибку*/
+                if (SINSstate.initError_kappa_1 != 0 || SINSstate.initError_kappa_3 != 0)
+                {
+                    double[] fz = new double[3], Wz = new double[3];
 
-                //    fz[0] = SINSstate.F_z[0] - SINSstate.initError_kappa_3 * SINSstate.F_z[1];
-                //    fz[1] = SINSstate.F_z[1] + SINSstate.initError_kappa_3 * SINSstate.F_z[0] - SINSstate.initError_kappa_1 * SINSstate.F_z[2];
-                //    fz[2] = SINSstate.F_z[2] + SINSstate.initError_kappa_1 * SINSstate.F_z[1];
+                    fz[0] = SINSstate.F_z[0] + SINSstate.initError_kappa_3 * SINSstate.F_z[1];
+                    fz[1] = SINSstate.F_z[1] - SINSstate.initError_kappa_3 * SINSstate.F_z[0] + SINSstate.initError_kappa_1 * SINSstate.F_z[2];
+                    fz[2] = SINSstate.F_z[2] - SINSstate.initError_kappa_1 * SINSstate.F_z[1];
 
-                //    Wz[0] = SINSstate.W_z[0] - SINSstate.initError_kappa_3 * SINSstate.W_z[1];
-                //    Wz[1] = SINSstate.W_z[1] + SINSstate.initError_kappa_3 * SINSstate.W_z[0] - SINSstate.initError_kappa_1 * SINSstate.W_z[2];
-                //    Wz[2] = SINSstate.W_z[2] + SINSstate.initError_kappa_1 * SINSstate.W_z[1];
+                    Wz[0] = SINSstate.W_z[0] + SINSstate.initError_kappa_3 * SINSstate.W_z[1];
+                    Wz[1] = SINSstate.W_z[1] - SINSstate.initError_kappa_3 * SINSstate.W_z[0] + SINSstate.initError_kappa_1 * SINSstate.W_z[2];
+                    Wz[2] = SINSstate.W_z[2] - SINSstate.initError_kappa_1 * SINSstate.W_z[1];
 
-                //    SimpleOperations.CopyArray(SINSstate.F_z, fz);
-                //    SimpleOperations.CopyArray(SINSstate.W_z, Wz);
-                //}
+                    SimpleOperations.CopyArray(SINSstate.F_z, fz);
+                    SimpleOperations.CopyArray(SINSstate.W_z, Wz);
+                }
 
 
                 //---Запоминаем координаты предыдущей контрольной точки
@@ -199,8 +201,8 @@ namespace Common_Namespace
                 }
 
                 // --- Делаем поправку на введенное значение ошибки масштаба одометра
-                SINSstate.OdometerData.odometer_left.Value /= (1.0 + SINSstate.alpha_scaleError);
-                SINSstate.OdometerData.odometer_right.Value /= (1.0 + SINSstate.alpha_scaleError);
+                SINSstate.OdometerData.odometer_left.Value /= (1.0 + SINSstate.alpha_scaleError - SINSstate.initError_scaleError);
+                SINSstate.OdometerData.odometer_right.Value /= (1.0 + SINSstate.alpha_scaleError - SINSstate.initError_scaleError);
 
 
                 // --- Фильтруем всплески в показаниях одометра

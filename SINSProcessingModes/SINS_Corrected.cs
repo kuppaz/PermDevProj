@@ -79,19 +79,6 @@ namespace SINSProcessingModes
                     if (SINSstate.Vertical_kappa1 > 0)
                         SINSstate.Cumulative_KappaEst[0] = SINSstate.Vertical_Cumulative_KalmanErrorVector[SINSstate.Vertical_kappa1];
 
-                    /*Поворачиваем на моделируюемую ошибку*/
-                    if (SINSstate.initError_kappa_1 != 0 || SINSstate.initError_kappa_3 != 0 || SINSstate.initError_scaleError != 0)
-                    {
-                        double[] initError_kappa = new double[3];
-                        initError_kappa[0] = -SINSstate.initError_kappa_1;
-                        initError_kappa[2] = SINSstate.initError_kappa_3;
-
-                        SimpleOperations.CopyArray(SINSstate.OdoSpeed_s,
-                            (Matrix.UnitMatrix(3) + Matrix.SkewSymmetricMatrix(initError_kappa)) / (1.0 - SINSstate.initError_scaleError) * SINSstate.OdoSpeed_s);
-                        SimpleOperations.CopyArray(SINSstate.OdometerVector,
-                            (Matrix.UnitMatrix(3) + Matrix.SkewSymmetricMatrix(initError_kappa)) / (1.0 - SINSstate.initError_scaleError) * SINSstate.OdometerVector);
-                    }
-
                     //--- Корректируем обновление данных с одометра по оценкам ошибок (обратные связи) ---//
                     SimpleOperations.CopyArray(SINSstate.OdoSpeed_s,
                         (Matrix.UnitMatrix(3) + Matrix.SkewSymmetricMatrix(SINSstate.Cumulative_KappaEst)) / (1.0 + SINSstate.Cumulative_KappaEst[1]) * SINSstate.OdoSpeed_s);
@@ -146,8 +133,7 @@ namespace SINSProcessingModes
                 // --- дополнительно прореживаю коррекцию i % 5 - раз в 5 тактов
                 if (SINSstate.first_N_meters_StartHeightCorrection_flag
                     && (SINSstate.OdometerData.odometer_left.Value - SINSstate.OdometerStartValue) <= SINSstate.first_N_meters_StartHeightCorrection_value
-                    && i % 5 == 0
-                    )
+                    && i % 5 == 0 )
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, 0.0, 0.0, SINSstate.Altitude_Start, SINSstate.Noise_Marker_PositionError);
 
 
@@ -157,7 +143,8 @@ namespace SINSProcessingModes
 
 
 
-                bool flag_UsingCorrection_tmp = SINSstate.flag_UsingCorrection, flag_KNS = false;
+                bool flag_UsingCorrection_tmp = SINSstate.flag_UsingCorrection
+                    , flag_KNS = false;
                 int odometer_left_isReady_tmp = SINSstate.OdometerData.odometer_left.isReady;
                 if ((SINSstate.CalibrationFirstCP == 0 || SINSstate.CalibrationFirstCP_prev == 0) && SINSstate.OdometerData.odometer_left.Value > 0)
                 {
@@ -183,6 +170,27 @@ namespace SINSProcessingModes
 
                     KalmanVars.Noise_Pos = 1.0;
 
+                    //for (int j = 0; j < SimpleData.iMx; j++)
+                    //{
+                    //    if (j != SINSstate.value_iMx_r_odo_12 && j != SINSstate.value_iMx_r_odo_12 + 1)
+                    //    {
+                    //        KalmanVars.CovarianceMatrixS_m[j * SimpleData.iMx + (SINSstate.value_iMx_r_odo_12 + 0)]
+                    //            = KalmanVars.CovarianceMatrixS_p[j * SimpleData.iMx + (SINSstate.value_iMx_r_odo_12 + 0)] = 0.0;
+                    //        KalmanVars.CovarianceMatrixS_m[j * SimpleData.iMx + (SINSstate.value_iMx_r_odo_12 + 1)]
+                    //            = KalmanVars.CovarianceMatrixS_p[j * SimpleData.iMx + (SINSstate.value_iMx_r_odo_12 + 1)] = 0.0;
+
+                    //        if (j != SINSstate.value_iMx_kappa_3_ds && j != SINSstate.value_iMx_kappa_3_ds + 1)
+                    //        {
+                    //            KalmanVars.CovarianceMatrixS_m[j * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 0)]
+                    //                = KalmanVars.CovarianceMatrixS_p[j * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 0)] = 0.0;
+                    //            KalmanVars.CovarianceMatrixS_m[j * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 1)]
+                    //                = KalmanVars.CovarianceMatrixS_p[j * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 1)] = 0.0;
+                    //        }
+                    //    }
+                    //}
+
+                    SimpleOperations.PrintMatrixToFile_TinyToZero(KalmanVars.CovarianceMatrixS_m, SimpleData.iMx, SimpleData.iMx, "CovarianceMatrixS_m");
+                     
                     KalmanVars.CovarianceMatrixS_m[(SINSstate.value_iMx_kappa_3_ds + 0) * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 0)]
                         = KalmanVars.CovarianceMatrixS_p[(SINSstate.value_iMx_kappa_3_ds + 0) * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 0)] = 10.0 * SimpleData.ToRadian_min;
                     KalmanVars.CovarianceMatrixS_m[(SINSstate.value_iMx_kappa_3_ds + 1) * SimpleData.iMx + (SINSstate.value_iMx_kappa_3_ds + 1)]
