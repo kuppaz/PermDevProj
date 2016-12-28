@@ -32,38 +32,43 @@ namespace Common_Namespace
             if (longOdoIncrement / longOdoIncrement_dt == 0.0)
                 Noize = 0.01;
 
-
-            //---Разбиение на три составляющие---
-            KalmanVars.Matrix_H[(KalmanVars.cnt_measures + 0) * iMx + 0] = 1.0;
-            KalmanVars.Matrix_H[(KalmanVars.cnt_measures + 1) * iMx + 1] = 1.0;
-            KalmanVars.Matrix_H[(KalmanVars.cnt_measures + 0) * iMx + iMx_r12_odo + 0] = -1.0;
-            KalmanVars.Matrix_H[(KalmanVars.cnt_measures + 1) * iMx + iMx_r12_odo + 1] = -1.0;
-
-            // --- Формирование измерений по разности координат БИНС и одометрического счисления
-            KalmanVars.Measure[(KalmanVars.cnt_measures + 0)] = (SINSstate.Longitude - SINSstate_OdoMod.Longitude) * SINSstate.R_e * Math.Cos(SINSstate.Latitude);
-            KalmanVars.Measure[(KalmanVars.cnt_measures + 1)] = (SINSstate.Latitude - SINSstate_OdoMod.Latitude) * SINSstate.R_n;
-
-            KalmanVars.Noize_Z[(KalmanVars.cnt_measures + 0)] = Noize;
-            KalmanVars.Noize_Z[(KalmanVars.cnt_measures + 1)] = Noize;
-
-            KalmanVars.cnt_measures += 2;
-
-
-
-            // ----------------------------------------------------------//
-            // --------Измерение для коррекции вертикального канала-------------//
-            // ----------------------------------------------------------//
+            //if (Math.Abs(SINSstate.OdometerLeft_ArrayOfPrev[SINSstate.OdometerLeft_ArrayOfPrev.Length - 1] - SINSstate.OdometerLeft_ArrayOfPrev[0]) > 0 )
+            if (SINSstate.OdometerData.odometer_left.Value > 0.0)
             {
-                KalmanVars.Vertical_Matrix_H[(KalmanVars.Vertical_cnt_measures + 0) * SimpleData.iMx_Vertical + 0] = 1.0;
-                KalmanVars.Vertical_Matrix_H[(KalmanVars.Vertical_cnt_measures + 0) * SimpleData.iMx_Vertical + SINSstate.Vertical_rOdo3] = -1.0;
+                //---Разбиение на три составляющие---
+                KalmanVars.Matrix_H[(KalmanVars.cnt_measures + 0) * iMx + 0] = 1.0;
+                KalmanVars.Matrix_H[(KalmanVars.cnt_measures + 1) * iMx + 1] = 1.0;
+                KalmanVars.Matrix_H[(KalmanVars.cnt_measures + 0) * iMx + iMx_r12_odo + 0] = -1.0;
+                KalmanVars.Matrix_H[(KalmanVars.cnt_measures + 1) * iMx + iMx_r12_odo + 1] = -1.0;
 
-                KalmanVars.Vertical_Measure[(KalmanVars.Vertical_cnt_measures + 0)] = SINSstate.Height - SINSstate_OdoMod.Height;
+                // --- Формирование измерений по разности координат БИНС и одометрического счисления
+                KalmanVars.Measure[(KalmanVars.cnt_measures + 0)] = (SINSstate.Longitude - SINSstate_OdoMod.Longitude) * SINSstate.R_e * Math.Cos(SINSstate.Latitude);
+                KalmanVars.Measure[(KalmanVars.cnt_measures + 1)] = (SINSstate.Latitude - SINSstate_OdoMod.Latitude) * SINSstate.R_n;
 
-                // --- шум измерения
-                KalmanVars.Vertical_Noize_Z[(KalmanVars.Vertical_cnt_measures + 0)] = Noize * SINSstate.OdoVerticalNoiseMultiplicator;
+                KalmanVars.Noize_Z[(KalmanVars.cnt_measures + 0)] = Noize;
+                KalmanVars.Noize_Z[(KalmanVars.cnt_measures + 1)] = Noize;
 
-                KalmanVars.Vertical_cnt_measures += 1;
+                KalmanVars.cnt_measures += 2;
+
+
+
+                // ----------------------------------------------------------//
+                // --------Измерение для коррекции вертикального канала-------------//
+                // ----------------------------------------------------------//
+                {
+                    KalmanVars.Vertical_Matrix_H[(KalmanVars.Vertical_cnt_measures + 0) * SimpleData.iMx_Vertical + 0] = 1.0;
+                    KalmanVars.Vertical_Matrix_H[(KalmanVars.Vertical_cnt_measures + 0) * SimpleData.iMx_Vertical + SINSstate.Vertical_rOdo3] = -1.0;
+
+                    KalmanVars.Vertical_Measure[(KalmanVars.Vertical_cnt_measures + 0)] = SINSstate.Height - SINSstate_OdoMod.Height;
+
+                    // --- шум измерения
+                    KalmanVars.Vertical_Noize_Z[(KalmanVars.Vertical_cnt_measures + 0)] = Noize * SINSstate.OdoVerticalNoiseMultiplicator;
+
+                    KalmanVars.Vertical_cnt_measures += 1;
+                }
             }
+            else
+                Make_H_KNS(KalmanVars, SINSstate, SINSstate_OdoMod);
 
             KalmanVars.counter_odoPosCorrection++;
         }

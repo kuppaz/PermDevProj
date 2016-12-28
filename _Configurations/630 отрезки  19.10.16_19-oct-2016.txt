@@ -65,6 +65,6 @@ ScaleError=0.0
 
 //Возможно изначально сбить настройки углов установки БИНС на корпусе, в градусах
 initError_kappa_1=3.0
-initError_kappa_3=2.0
+initError_kappa_3=3.0
 //Сбиваем масштабный коэффициент (в процентах)
 initError_ScaleError=7.0
