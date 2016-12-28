@@ -354,9 +354,6 @@ namespace Alignment
             SINSstate.A_nxi = SimpleOperations.A_ne(SINSstate.Time - SINSstate.Time_Alignment, SINSstate.Longitude_Start);
             SINSstate.AT = Matrix.Multiply(SINSstate.AT, SINSstate.A_nxi);
 
-            SINSstate.GPS_CounterOfPoints = 0;
-            SINSstate.GPS_CounterOfPoints_prev = 0;
-
 
             Alignment_avg_rougth.Close();
             Alignment_InputData.Close();

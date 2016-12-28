@@ -187,17 +187,15 @@ namespace Common_Namespace
             if (Convert.ToInt32(CalibrationStartMode) == 1)
                 SINSstate.CalibrationStartMode = true;
 
-
             // --- Углы рассогласования осей БИНС и динамических осей объекта, если это нужно --- //
             SINSstate.alpha_kappa_3 = Convert.ToDouble(alpha_kappa_3) * SimpleData.ToRadian; // -- Угол рассогласования по курсу
             SINSstate.alpha_kappa_1 = Convert.ToDouble(alpha_kappa_1) * SimpleData.ToRadian; // -- Угол рассогласования по тангажу
             SINSstate.alpha_scaleError = Convert.ToDouble(ScaleError) / 100.0;
 
-            {
-                SINSstate.initError_kappa_3 = Convert.ToDouble(initError_kappa_3) * SimpleData.ToRadian; // -- Специальная введенная ошибка по курсу
-                SINSstate.initError_kappa_1 = Convert.ToDouble(initError_kappa_1) * SimpleData.ToRadian; // -- Специальная введенная ошибка по тангажу
-                SINSstate.initError_scaleError = Convert.ToDouble(initError_ScaleError) / 100.0;
-            }
+
+            SINSstate.initError_kappa_3 = Convert.ToDouble(initError_kappa_3) * SimpleData.ToRadian; // -- Специальная введенная ошибка по курсу
+            SINSstate.initError_kappa_1 = Convert.ToDouble(initError_kappa_1) * SimpleData.ToRadian; // -- Специальная введенная ошибка по тангажу
+            SINSstate.initError_scaleError = Convert.ToDouble(initError_ScaleError) / 100.0;
 
 
             // --- Шум по горизонтальным ошибкам координат --- //
@@ -228,7 +226,7 @@ namespace Common_Namespace
 
             SINSstate.stdScale = 0.01;
 
-            SINSstate.Noise_Marker_PositionError = 0.01; // в метрах
+            SINSstate.Noise_Marker_PositionError = 0.1; // в метрах
             SINSstate.Noise_GPS_PositionError = 2.0; // в метрах
             KalmanVars.OdoNoise_STOP = 0.1;
 
@@ -251,27 +249,26 @@ namespace Common_Namespace
                 SINSstate.stdScale = 0.001;
 
 
-            //--- Если запуск производится в режиме калибровочки, то меняем начальные ковариации
-            if (SINSstate.CalibrationStartMode && !(SINSstate.alpha_kappa_3 != 0 || SINSstate.alpha_kappa_1 != 0 || SINSstate.alpha_scaleError != 0))
-            {
-                //KalmanVars.Noise_Pos = 0.1;
-                if (SINSstate.alpha_kappa_1 != 0)
-                    SINSstate.stdKappa1 = 60.0;
-
-                if (SINSstate.alpha_kappa_3 != 0)
-                    SINSstate.stdKappa3 = 60.0;
-
-                if (SINSstate.alpha_scaleError != 0)
-                    SINSstate.stdScale = 0.02;
-            }
-
-
-
             ProcHelp.LongSNS = ProcHelp.LongSNS * 180 / Math.PI;
             ProcHelp.LatSNS = ProcHelp.LatSNS * 180 / Math.PI;
 
             ApplyMatrixStartCondition(SINSstate);
             ApplyMatrixStartCondition(SINSstate_OdoMod);
+
+
+            //--- Если запуск производится в режиме калибровочки, то меняем начальные ковариации
+            if (SINSstate.CalibrationStartMode)
+            {
+                //KalmanVars.Noise_Pos = 0.1;
+                if (SINSstate.alpha_kappa_1 == 0)
+                    SINSstate.stdKappa1 = 60.0;
+
+                if (SINSstate.alpha_kappa_3 == 0)
+                    SINSstate.stdKappa3 = 60.0;
+
+                if (SINSstate.alpha_scaleError == 0)
+                    SINSstate.stdScale = 0.02;
+            }
 
         }
     }

@@ -188,8 +188,7 @@ namespace Common_Namespace
         public double odotime_cur, odotime_prev;
         public bool flag_ControlPointCorrection;
         public double NumberOfFilesForSmoothing;
-        public int GPS_CounterOfPoints = 0, GPS_CounterOfPoints_prev = 0;
-        public int CalibrationFirstCP = 0, CalibrationFirstCP_prev = 0;
+        public int GPS_CounterOfPoints = 0;
 
         public bool flag_true_Marker = false;
         public int MarkersInputCount = 0, MarkerNumberLastUsed = 0;

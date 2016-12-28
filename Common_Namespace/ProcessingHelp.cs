@@ -393,9 +393,6 @@ namespace Common_Namespace
                                     + " " + SINSstate.GPS_Data.gps_Latitude_pnppk_sol.Value * SimpleData.ToDegree
                                     + " " + SINSstate.GPS_Data.gps_Longitude_pnppk_sol.Value * SimpleData.ToDegree
                                     + " " + SINSstate.GPS_Data.gps_Altitude_pnppk_sol.Value
-
-                                    + " " + SINSstate_OdoMod.OdoSpeed_s[1] + " " + ((SINSstate_OdoMod.Latitude) * SimpleData.ToDegree) + " " + ((SINSstate_OdoMod.Longitude) * SimpleData.ToDegree)
-                                    + " " + SINSstate.OdometerData.odometer_left.Value
                                     ;
 
                 Nav_FeedbackSolution.WriteLine(ProcHelp.datastring);
@@ -469,7 +466,7 @@ namespace Common_Namespace
                     ProcHelp.datastring = ProcHelp.datastring
                         + " " + SINSstate.Cumulative_KalmanErrorVector[iMx_kappa_3_ds + 0] * SimpleData.ToDegree
                         + " " + SINSstate.Cumulative_KalmanErrorVector[iMx_kappa_3_ds + 1]
-                        + " " + (SINSstate.Cumulative_KalmanErrorVector[(iMx_alphaBeta + 2)] - SINSstate.Cumulative_KalmanErrorVector[iMx_kappa_3_ds + 0]) * SimpleData.ToDegree;
+                        + " " + (-SINSstate.Cumulative_KalmanErrorVector[(iMx_alphaBeta + 2)] + SINSstate.Cumulative_KalmanErrorVector[iMx_kappa_3_ds + 0]) * SimpleData.ToDegree;
                 else
                     ProcHelp.datastring = ProcHelp.datastring + " 0 0";
 

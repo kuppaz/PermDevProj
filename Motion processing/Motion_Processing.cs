@@ -93,7 +93,6 @@ namespace Motion_Processing
             SINSstate.stdAlpha1 = -SINSstate.stdF[1] / 9.81; //радиан
             SINSstate.stdAlpha2 = SINSstate.stdF[0] / 9.81; //радиан
             SINSstate.stdBeta3 = SINSstate.stdNu * SimpleData.ToRadian / 3600.0 / (SimpleData.U * Math.Cos(SINSstate.Latitude)); //радиан
-            //SINSstate.stdBeta3 = 2.0 * SimpleData.ToRadian;
 
 
             // --- Инициализация матрицы начальной ковариации

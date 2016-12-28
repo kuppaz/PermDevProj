@@ -70,7 +70,3 @@ ScaleError=0.0
 //alpha_kappa_1=3.06877
 //alpha_kappa_3=0.10694
 //ScaleError=0.016
-
-//Возможно изначально сбить настройки углов установки БИНС на корпусе, в градусах
-initError_kappa_1=1.5
-initError_kappa_3=2.0

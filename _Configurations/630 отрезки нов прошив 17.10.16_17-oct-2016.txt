@@ -19,9 +19,6 @@ AlignmentDuration=430
 //Параметр AlignmentEngineIsOff выключен (1) ли двигатель во время стоянки или включен (0)
 AlignmentEngineIsOff=1
 
-//Флаг режима калибровки. Если ПО запускается с целью проведения калибровочных испытаний, то должен быть флаг "1":
-CalibrationStartMode=1
-
 //NoiseParamDetermin_mode - режим определения шумовых составляющих датчиков
 //Режим NoiseParamDetermin_mode = 0 - параметры шумов определяются на интервале выставки
 //Режим NoiseParamDetermin_mode = 1 - параметры шумов определяются на заданном интервале (NoiseParamDetermin_startTime, NoiseParamDetermin_endTime) в секундах
@@ -61,9 +58,3 @@ alpha_kappa_3=0.0
 //Значение ошибки масштабного коэффициента (в процентах)
 ScaleError=0.0
 //ScaleError=-0.200
-
-//Возможно изначально сбить настройки углов установки БИНС на корпусе, в градусах
-initError_kappa_1=3.0
-initError_kappa_3=3.0
-//Сбиваем масштабный коэффициент (в процентах)
-initError_ScaleError=10.0

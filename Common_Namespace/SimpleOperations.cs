@@ -341,21 +341,6 @@ namespace Common_Namespace
             }
             PrintMatrix.Close();
         }
-        public static void PrintMatrixToFile(double[] Matrix, int dim_str, int dim_colls, string nameFile)
-        {
-            StreamWriter PrintMatrix = new StreamWriter(SimpleData.PathOutputString + "\\PrintMatrix_" + nameFile + ".txt");
-            for (int j = 0; j < dim_str; j++)
-            {
-                string str_odo = null;
-                for (int i = 0; i < dim_colls; i++)
-                {
-                    str_odo = str_odo + " " + Matrix[j * dim_colls + i].ToString();
-                }
-
-                PrintMatrix.WriteLine(str_odo);
-            }
-            PrintMatrix.Close();
-        }
 
         public static void PrintMatrixToFile_TinyToZero(double[] Matrix, int dim_str, int dim_colls, string nameFile)
         {
@@ -369,6 +354,22 @@ namespace Common_Namespace
                     if (Math.Abs(Matrix[j * dim_colls + i]) < 1E-4)
                         tmp = 0.0;
                     str_odo = str_odo + " " + tmp.ToString();
+                }
+
+                PrintMatrix.WriteLine(str_odo);
+            }
+            PrintMatrix.Close();
+        }
+
+        public static void PrintMatrixToFile(double[] Matrix, int dim_str, int dim_colls, string nameFile)
+        {
+            StreamWriter PrintMatrix = new StreamWriter(SimpleData.PathOutputString + "\\PrintMatrix_" + nameFile + ".txt");
+            for (int j = 0; j < dim_str; j++)
+            {
+                string str_odo = null;
+                for (int i = 0; i < dim_colls; i++)
+                {
+                    str_odo = str_odo + " " + Matrix[j * dim_colls + i].ToString();
                 }
 
                 PrintMatrix.WriteLine(str_odo);
