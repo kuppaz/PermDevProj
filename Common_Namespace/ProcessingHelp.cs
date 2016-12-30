@@ -144,20 +144,20 @@ namespace Common_Namespace
 
                 // --- Обрабатываем ситуацию, когда одометр установлен неправильно и не введен масштабный коэффициент
                 double Odo_SINS_VS_distance_coefficient = SINSstate.OdometerData.odometer_left.Value / SINSstate.distance_by_SINS;
-                //if (SINSstate.distance_by_SINS < 110.0 && Math.Abs(Odo_SINS_VS_distance_coefficient) > 0.2)
-                //{
-                //    if (SINSstate.distance_by_SINS > 5.0 && Odo_SINS_VS_distance_coefficient < 0)
-                //    {
-                //        SINSstate.OdometerData_Sign = -1;
-                //        SINSstate.OdometerLeftPrev *= SINSstate.OdometerData_Sign;
-                //    }
-                //    if (SINSstate.distance_by_SINS > 100.0 && SINSstate.OdometerData_RoughtScale_flag == 0 && Math.Abs(1 - Odo_SINS_VS_distance_coefficient) > 0.3)
-                //    {
-                //        SINSstate.OdometerData_RoughtScale = Odo_SINS_VS_distance_coefficient;
-                //        SINSstate.OdometerLeftPrev /= SINSstate.OdometerData_RoughtScale;
-                //        SINSstate.OdometerData_RoughtScale_flag = 1;
-                //    }
-                //}
+                if (SINSstate.distance_by_SINS < 110.0 && Math.Abs(Odo_SINS_VS_distance_coefficient) > 0.2)
+                {
+                    if (SINSstate.distance_by_SINS > 5.0 && Odo_SINS_VS_distance_coefficient < 0)
+                    {
+                        SINSstate.OdometerData_Sign = -1;
+                        SINSstate.OdometerLeftPrev *= SINSstate.OdometerData_Sign;
+                    }
+                    if (SINSstate.distance_by_SINS > 100.0 && SINSstate.OdometerData_RoughtScale_flag == 0 && Math.Abs(1 - Odo_SINS_VS_distance_coefficient) > 0.3)
+                    {
+                        SINSstate.OdometerData_RoughtScale = Odo_SINS_VS_distance_coefficient;
+                        SINSstate.OdometerLeftPrev /= SINSstate.OdometerData_RoughtScale;
+                        SINSstate.OdometerData_RoughtScale_flag = 1;
+                    }
+                }
 
                 // --- Считываем показания одометров
                 SINSstate.OdometerData.odometer_left.Value = (Convert.ToDouble(dataArray2[18]) - SINSstate.OdometerData.odometer_left.Value_Correction) * SINSstate.OdometerData_Sign / SINSstate.OdometerData_RoughtScale;

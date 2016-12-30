@@ -144,6 +144,9 @@ namespace Common_Namespace
 
             if (Latitude_CP != 0 || Longitude_CP != 0 || Altitude_CP != 0.0)
                 SINSstate.flag_UsingCorrection = true;
+
+            if (Latitude_CP != 0 && Longitude_CP != 0)
+                SINSstate.flag_ControlPointCorrection = true;
         }
 
 

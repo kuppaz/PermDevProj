@@ -143,40 +143,11 @@ namespace SINSProcessingModes
                     SINSstate.flag_UsingCorrection = false;
 
 
-
-
-                bool tmp_flag_UsingCorrection = SINSstate.flag_UsingCorrection;
-                int tmp_odometer_left_IsReady = SINSstate.OdometerData.odometer_left.isReady;
-                if (SINSstate.Time + SINSstate.Time_Alignment < 1800.00 //1350.00
-                    //&& SINSstate.Time + SINSstate.Time_Alignment > 1160.00
-                    )
-                {
-                    //if (SINSstate.Time + SINSstate.Time_Alignment > 1160.00)
-                    //    KalmanVars.Noise_Pos = 0.1;
-
-                    if (SINSstate.flag_ControlPointCorrection == false)
-                        SINSstate.flag_UsingCorrection = false;
-
-                    SINSstate.OdometerData.odometer_left.isReady = 2;
-                }
-                //else
-                //{
-                //    KalmanVars.Noise_Pos = 1.0;
-                //}
-
-                if (SINSstate.Time + SINSstate.Time_Alignment < 1160.00)
-                {
-                    SINSstate.flag_UsingCorrection = true;
-                    CorrectionModel.Make_H_KNS(KalmanVars, SINSstate, SINSstate_OdoMod);
-                }
-
-                if (i % 50 == 0)
+                if (i % 100 == 0)
                 {
                     SimpleOperations.PrintMatrixToFile_TinyToZero(KalmanVars.CovarianceMatrixS_m, SimpleData.iMx, SimpleData.iMx, "CovarianceMatrixS_m");
                     SimpleOperations.PrintMatrixToFile_TinyToZero(KalmanVars.Matrix_A, SimpleData.iMx, SimpleData.iMx, "Matrix_A");
                 }
-
-
 
 
                 //---------------------------------------------------------------------//
@@ -222,11 +193,6 @@ namespace SINSProcessingModes
                 if (SINSstate.flag_UsingCorrection == true)
                     SINSprocessing.NullingOfCorrectedErrors(SINSstate, KalmanVars);
 
-
-                SINSstate.flag_UsingCorrection = tmp_flag_UsingCorrection;
-                SINSstate.OdometerData.odometer_left.isReady = tmp_odometer_left_IsReady;
-
-
                 //--- Переопределение значений данных одометра ---
                 SINSprocessing.Redifinition_OdoCounts(SINSstate, SINSstate_OdoMod);
             }
@@ -266,31 +232,26 @@ namespace SINSProcessingModes
             {
                 if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1350.00) < 0.01)
                 {
-                    SINSstate.flag_ControlPointCorrection = true;
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
                 }
                 if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 1800.00) < 0.01)
                 {
-                    SINSstate.flag_ControlPointCorrection = true;
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
                 }
                 if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 2300.00) < 0.01)
                 {
-                    SINSstate.flag_ControlPointCorrection = true;
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
                 }
                 if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 2750.00) < 0.01)
                 {
-                    SINSstate.flag_ControlPointCorrection = true;
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6434091, 10485904);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 187, SINSstate.Noise_Marker_PositionError);
                 }
                 if (Math.Abs(SINSstate.Time + SINSstate.Time_Alignment - 3215.00) < 0.01)
                 {
-                    SINSstate.flag_ControlPointCorrection = true;
                     double[] PhiLambdaH_SK42 = GeodesicVsGreenwich.Phi_Lambda_GAUSS_KRUGER(6433925, 10487154);
                     CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod, PhiLambdaH_SK42[0], PhiLambdaH_SK42[1], 176, SINSstate.Noise_Marker_PositionError);
                 }

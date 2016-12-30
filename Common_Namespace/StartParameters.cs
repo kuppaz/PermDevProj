@@ -135,8 +135,8 @@ namespace Common_Namespace
                     if (tmpstr[0].Trim() == "initError_ScaleError")
                         initError_ScaleError = tmpstr[1];
 
-                    if (tmpstr[0].Trim() == "CalibrationStartMode")
-                        CalibrationStartMode = tmpstr[1];
+                    //if (tmpstr[0].Trim() == "CalibrationStartMode")
+                    //    CalibrationStartMode = tmpstr[1];
                 }
             }
 
@@ -184,8 +184,8 @@ namespace Common_Namespace
                 SINSstate.first_N_meters_StartHeightCorrection_flag = false;
             SINSstate.first_N_meters_StartHeightCorrection_value = Convert.ToDouble(StartHeightCorrection_value);
 
-            if (Convert.ToInt32(CalibrationStartMode) == 1)
-                SINSstate.CalibrationStartMode = true;
+            //if (Convert.ToInt32(CalibrationStartMode) == 1)
+            //    SINSstate.CalibrationStartMode = true;
 
             // --- Углы рассогласования осей БИНС и динамических осей объекта, если это нужно --- //
             SINSstate.alpha_kappa_3 = Convert.ToDouble(alpha_kappa_3) * SimpleData.ToRadian; // -- Угол рассогласования по курсу
