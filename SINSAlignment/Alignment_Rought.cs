@@ -26,7 +26,9 @@ namespace Alignment
         public static int RougthAlignment(Proc_Help ProcHelp, SINS_State SINSstate, StreamReader myFile, Kalman_Vars KalmanVars, SINS_State SINSstate_OdoMod, StreamWriter GRTV_output)
         {
             int k = 0, i = 0;
-            double[] f_avg = new double[3]; double[] w_avg = new double[3]; double[] w_avg_x = new double[3]; double[] U_s = new double[3];
+            double[] f_avg = new double[3], f_sum_squared = new double[3];
+            double[] w_avg = new double[3], w_sum_squared = new double[3]; 
+            double[] w_avg_x = new double[3]; double[] U_s = new double[3];
             Matrix A_xs = new Matrix(3, 3);
 
             StreamWriter Alignment_avg_rougth = new StreamWriter(SimpleData.PathOutputString + "\\Alignment\\Alignment_avg_rougth.txt");
@@ -36,12 +38,12 @@ namespace Alignment
             // --- вспомогательные массивы для определения сигмы шумов
             // --- array_&_i - полный массив показаний датчиков;
             // --- array_sigma_&_i - частичный массив показаний датчиков, не включающий в себя интервалы, где вместо показаний датчиков константа;
-            double[] array_f_1 = new double[200000], array_sigma_f_1 = new double[200000];
-            double[] array_f_2 = new double[200000], array_sigma_f_2 = new double[200000];
-            double[] array_f_3 = new double[200000], array_sigma_f_3 = new double[200000];
-            double[] array_w_1 = new double[200000], array_sigma_w_1 = new double[200000];
-            double[] array_w_2 = new double[200000], array_sigma_w_2 = new double[200000];
-            double[] array_w_3 = new double[200000], array_sigma_w_3 = new double[200000];
+            double[] array_f_1 = new double[200000];
+            double[] array_f_2 = new double[200000];
+            double[] array_f_3 = new double[200000];
+            double[] array_w_1 = new double[200000];
+            double[] array_w_2 = new double[200000];
+            double[] array_w_3 = new double[200000];
 
             // --- вектора СКО
             double[] sigma_f = new double[3];
@@ -115,51 +117,40 @@ namespace Alignment
                 {
                     if (Math.Abs(array_sigma_f_1_tmp_sum - array_f_1[i]) > 1E-9)
                     {
-                        array_sigma_f_1[k_f] = SINSstate.F_z[0];
-                        array_sigma_f_2[k_f] = SINSstate.F_z[1];
-                        array_sigma_f_3[k_f] = SINSstate.F_z[2];
                         f_avg[0] += SINSstate.F_z[0];
                         f_avg[1] += SINSstate.F_z[1];
                         f_avg[2] += SINSstate.F_z[2];
+                        f_sum_squared[0] += SINSstate.F_z[0] * SINSstate.F_z[0];
+                        f_sum_squared[1] += SINSstate.F_z[1] * SINSstate.F_z[1];
+                        f_sum_squared[2] += SINSstate.F_z[2] * SINSstate.F_z[2];
                         k_f++;
                     }
 
                     // --- Если показания датчиков меняются, то заполняем соответствующие массивы
                     if (Math.Abs(array_sigma_w_1_tmp_sum - array_w_1[i]) > 1E-9)
                     {
-                        array_sigma_w_1[k_nu] = SINSstate.W_z[0];
-                        array_sigma_w_2[k_nu] = SINSstate.W_z[1];
-                        array_sigma_w_3[k_nu] = SINSstate.W_z[2];
                         w_avg[0] += SINSstate.W_z[0];
                         w_avg[1] += SINSstate.W_z[1];
                         w_avg[2] += SINSstate.W_z[2];
+                        w_sum_squared[0] += SINSstate.W_z[0] * SINSstate.W_z[0];
+                        w_sum_squared[1] += SINSstate.W_z[1] * SINSstate.W_z[1];
+                        w_sum_squared[2] += SINSstate.W_z[2] * SINSstate.W_z[2];
                         k_nu++;
                     }
 
-                    if (SINSstate.i_global % 250 == 0)
+                    if (SINSstate.i_global % 250 == 0 && k_f > 1 && k_nu > 1)
                     {
-                        // --- вычисляем СКО датчиков
-                        for (int j = 1; j < k_f; j++)
-                        {
-                            sigma_f[0] += Math.Abs(array_sigma_f_1[j] - f_avg[0] / Math.Max(k_f, 1));
-                            sigma_f[1] += Math.Abs(array_sigma_f_2[j] - f_avg[1] / Math.Max(k_f, 1));
-                            sigma_f[2] += Math.Abs(array_sigma_f_3[j] - f_avg[2] / Math.Max(k_f, 1));
-                        }
-                        sigma_f[0] = sigma_f[0] / Math.Max(k_f, 1);
-                        sigma_f[1] = sigma_f[1] / Math.Max(k_f, 1);
-                        sigma_f[2] = sigma_f[2] / Math.Max(k_f, 1);
+                        // --- вычисляем СКО датчиков в процессе
+                        sigma_f[0] = Math.Sqrt((f_sum_squared[0] - k_f * Math.Pow(f_avg[0] / k_f, 2)) / (k_f - 1));
+                        sigma_f[1] = Math.Sqrt((f_sum_squared[1] - k_f * Math.Pow(f_avg[1] / k_f, 2)) / (k_f - 1));
+                        sigma_f[2] = Math.Sqrt((f_sum_squared[2] - k_f * Math.Pow(f_avg[1] / k_f, 2)) / (k_f - 1));
 
-
-                        for (int j = 1; j < k_nu; j++)
-                        {
-                            sigma_w[0] += Math.Abs(array_sigma_w_1[j] - w_avg[0] / Math.Max(k_nu, 1));
-                            sigma_w[1] += Math.Abs(array_sigma_w_2[j] - w_avg[1] / Math.Max(k_nu, 1));
-                            sigma_w[2] += Math.Abs(array_sigma_w_3[j] - w_avg[2] / Math.Max(k_nu, 1));
-                        }
-                        sigma_w[0] = sigma_w[0] / Math.Max(k_nu, 1);
-                        sigma_w[1] = sigma_w[1] / Math.Max(k_nu, 1);
-                        sigma_w[2] = sigma_w[2] / Math.Max(k_nu, 1);
+                        sigma_w[0] = Math.Sqrt((w_sum_squared[0] - k_nu * Math.Pow(w_avg[0] / k_nu, 2)) / (k_nu - 1));
+                        sigma_w[1] = Math.Sqrt((w_sum_squared[1] - k_nu * Math.Pow(w_avg[1] / k_nu, 2)) / (k_nu - 1));
+                        sigma_w[2] = Math.Sqrt((w_sum_squared[2] - k_nu * Math.Pow(w_avg[2] / k_nu, 2)) / (k_nu - 1));
                     }
+
+
                 }
 
 
@@ -258,32 +249,21 @@ namespace Alignment
                 }
             }
 
+            //sigma_mu = Math.Sqrt(sigma_mu);
+
             // --- Вычисляем средние значения показаний каждого из датчиков
             f_avg[0] = f_avg[0] / k_f; w_avg[0] = w_avg[0] / k_nu;
             f_avg[1] = f_avg[1] / k_f; w_avg[1] = w_avg[1] / k_nu;
             f_avg[2] = f_avg[2] / k_f; w_avg[2] = w_avg[2] / k_nu;
 
             // --- вычисляем СКО датчиков
-            for (int j = 1; j < k_f; j++)
-            {
-                sigma_f[0] += Math.Abs(array_sigma_f_1[j] - f_avg[0]);
-                sigma_f[1] += Math.Abs(array_sigma_f_2[j] - f_avg[1]);
-                sigma_f[2] += Math.Abs(array_sigma_f_3[j] - f_avg[2]);
-            }
-            sigma_f[0] = sigma_f[0] / k_f;
-            sigma_f[1] = sigma_f[1] / k_f;
-            sigma_f[2] = sigma_f[2] / k_f;
+            sigma_f[0] = Math.Sqrt((f_sum_squared[0] - k_f * f_avg[0] * f_avg[0]) / (k_f - 1));
+            sigma_f[1] = Math.Sqrt((f_sum_squared[1] - k_f * f_avg[1] * f_avg[1]) / (k_f - 1));
+            sigma_f[2] = Math.Sqrt((f_sum_squared[2] - k_f * f_avg[2] * f_avg[2]) / (k_f - 1));
 
-
-            for (int j = 1; j < k_nu; j++)
-            {
-                sigma_w[0] += Math.Abs(array_sigma_w_1[j] - w_avg[0]);
-                sigma_w[1] += Math.Abs(array_sigma_w_2[j] - w_avg[1]);
-                sigma_w[2] += Math.Abs(array_sigma_w_3[j] - w_avg[2]);
-            }
-            sigma_w[0] = sigma_w[0] / k_nu;
-            sigma_w[1] = sigma_w[1] / k_nu;
-            sigma_w[2] = sigma_w[2] / k_nu;
+            sigma_w[0] = Math.Sqrt((w_sum_squared[0] - k_nu * w_avg[0] * w_avg[0]) / (k_nu - 1));
+            sigma_w[1] = Math.Sqrt((w_sum_squared[1] - k_nu * w_avg[1] * w_avg[1]) / (k_nu - 1));
+            sigma_w[2] = Math.Sqrt((w_sum_squared[2] - k_nu * w_avg[2] * w_avg[2]) / (k_nu - 1));
 
 
             // --- вычисляются шумы ньютонометров и дусов --- //

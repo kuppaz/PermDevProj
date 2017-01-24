@@ -90,7 +90,7 @@ namespace Motion_Processing
 
 
             // --- Формируются значения начальных ковариаций для ошибок углов ориентации
-            SINSstate.stdAlpha1 = -SINSstate.stdF[1] / 9.81; //радиан
+            SINSstate.stdAlpha1 = SINSstate.stdF[1] / 9.81; //радиан
             SINSstate.stdAlpha2 = SINSstate.stdF[0] / 9.81; //радиан
             SINSstate.stdBeta3 = SINSstate.stdNu * SimpleData.ToRadian / 3600.0 / (SimpleData.U * Math.Cos(SINSstate.Latitude)); //радиан
 

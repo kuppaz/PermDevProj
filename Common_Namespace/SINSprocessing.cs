@@ -223,30 +223,30 @@ namespace Common_Namespace
 
             // --- нач. ковариации для ошибок углов ориентации --- //
             KalmanVars.CovarianceMatrixS_m[(iMx_alphaBeta + 0) * iMx + (iMx_alphaBeta + 0)] = KalmanVars.CovarianceMatrixS_p[(iMx_alphaBeta + 0) * iMx + (iMx_alphaBeta + 0)]
-                = Math.Sign(SINSstate.stdAlpha1) * Math.Max(Math.Abs(SINSstate.stdAlpha1), 1E-6);  // 5 угл. минут
+                = Math.Max(Math.Abs(SINSstate.stdAlpha1), 1E-6);  // 5 угл. минут
             KalmanVars.CovarianceMatrixS_m[(iMx_alphaBeta + 1) * iMx + (iMx_alphaBeta + 1)] = KalmanVars.CovarianceMatrixS_p[(iMx_alphaBeta + 1) * iMx + (iMx_alphaBeta + 1)]
-                = Math.Sign(SINSstate.stdAlpha2) * Math.Max(Math.Abs(SINSstate.stdAlpha2), 1E-6);
+                = Math.Max(Math.Abs(SINSstate.stdAlpha2), 1E-6);
             KalmanVars.CovarianceMatrixS_m[(iMx_alphaBeta + 2) * iMx + (iMx_alphaBeta + 2)] = KalmanVars.CovarianceMatrixS_p[(iMx_alphaBeta + 2) * iMx + (iMx_alphaBeta + 2)]
-                = Math.Sign(SINSstate.stdBeta3) * Math.Max(Math.Abs(SINSstate.stdBeta3), 1E-6);
+                = Math.Max(Math.Abs(SINSstate.stdBeta3), 1E-6);
 
             // --- нач. ковариации для дрейфов ДУС --- //
             KalmanVars.CovarianceMatrixS_m[(iMx_Nu0 + 0) * iMx + (iMx_Nu0 + 0)] = KalmanVars.CovarianceMatrixS_p[(iMx_Nu0 + 0) * iMx + (iMx_Nu0 + 0)]
-                = Math.Sign(SINSstate.stdNu) * Math.Max(Math.Abs(SINSstate.stdNu) * SimpleData.ToRadian / 3600.0, 1E-10); 
+                = Math.Max(Math.Abs(SINSstate.stdNu) * SimpleData.ToRadian / 3600.0, 1E-10); 
             KalmanVars.CovarianceMatrixS_m[(iMx_Nu0 + 1) * iMx + (iMx_Nu0 + 1)] = KalmanVars.CovarianceMatrixS_p[(iMx_Nu0 + 1) * iMx + (iMx_Nu0 + 1)]
-                = Math.Sign(SINSstate.stdNu) * Math.Max(Math.Abs(SINSstate.stdNu) * SimpleData.ToRadian / 3600.0, 1E-10);
+                = Math.Max(Math.Abs(SINSstate.stdNu) * SimpleData.ToRadian / 3600.0, 1E-10);
             KalmanVars.CovarianceMatrixS_m[(iMx_Nu0 + 2) * iMx + (iMx_Nu0 + 2)] = KalmanVars.CovarianceMatrixS_p[(iMx_Nu0 + 2) * iMx + (iMx_Nu0 + 2)]
-                = Math.Sign(SINSstate.stdNu) * Math.Max(Math.Abs(SINSstate.stdNu) * SimpleData.ToRadian / 3600.0, 1E-10);
+                = Math.Max(Math.Abs(SINSstate.stdNu) * SimpleData.ToRadian / 3600.0, 1E-10);
 
             // --- нач. ковариации для горизонтальных ньютонометров --- //
             KalmanVars.CovarianceMatrixS_m[(f0_12 + 0) * iMx + (f0_12 + 0)] = KalmanVars.CovarianceMatrixS_p[(f0_12 + 0) * iMx + (f0_12 + 0)]
-                = Math.Sign(SINSstate.stdF[0]) * Math.Max(Math.Abs(SINSstate.stdF[0]), 1E-6);    // м/с^2
+                = Math.Max(Math.Abs(SINSstate.stdF[0]), 1E-6);    // м/с^2
             KalmanVars.CovarianceMatrixS_m[(f0_12 + 1) * iMx + (f0_12 + 1)] = KalmanVars.CovarianceMatrixS_p[(f0_12 + 1) * iMx + (f0_12 + 1)]
-                = Math.Sign(SINSstate.stdF[1]) * Math.Max(Math.Abs(SINSstate.stdF[1]), 1E-6);
+                = Math.Max(Math.Abs(SINSstate.stdF[1]), 1E-6);
 
             // --- нач. ковариации для вертикального ньютонометра, если он включен в вектор ошибок --- //
             if (SINSstate.value_iMx_f0_3 > 0)
                 KalmanVars.CovarianceMatrixS_m[(f0_3 + 0) * iMx + (f0_3 + 0)] = KalmanVars.CovarianceMatrixS_p[(f0_3 + 0) * iMx + (f0_3 + 0)]
-                    = Math.Sign(SINSstate.stdF[2]) * Math.Max(Math.Abs(SINSstate.stdF[2]), 1E-6);
+                    = Math.Max(Math.Abs(SINSstate.stdF[2]), 1E-6);
 
             // --- нач. ковариации для ошибок масштаба и ошибок углов установки БИНС на корпусе --- //
             if (iMx_kappa_3_ds > 0)
@@ -279,7 +279,7 @@ namespace Common_Namespace
 
             // --- нач. ковариации ошибки верт. ньютонометра --- //
             KalmanVars.Vertical_CovarianceMatrixS_m[vert_f0_3 * iMxV + vert_f0_3] = KalmanVars.Vertical_CovarianceMatrixS_p[vert_f0_3 * iMxV + vert_f0_3]
-                = Math.Sign(SINSstate.stdF[2]) * Math.Max(Math.Abs(SINSstate.stdF[2]), 1E-6);
+                = Math.Max(Math.Abs(SINSstate.stdF[2]), 1E-6);
 
             // --- нач. ковариации ошибок мастаба одометра и углов установки БИНС на корпусе --- //
             if (Vertical_kappa1 > 0)
