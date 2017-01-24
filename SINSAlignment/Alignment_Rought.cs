@@ -27,23 +27,13 @@ namespace Alignment
         {
             int k = 0, i = 0;
             double[] f_avg = new double[3], f_sum_squared = new double[3];
-            double[] w_avg = new double[3], w_sum_squared = new double[3]; 
+            double[] w_avg = new double[3], w_sum_squared = new double[3];
             double[] w_avg_x = new double[3]; double[] U_s = new double[3];
             Matrix A_xs = new Matrix(3, 3);
 
             StreamWriter Alignment_avg_rougth = new StreamWriter(SimpleData.PathOutputString + "\\Alignment\\Alignment_avg_rougth.txt");
             StreamWriter Alignment_InputData = new StreamWriter(SimpleData.PathOutputString + "\\Alignment\\Alignment_InputData.txt");
             StreamWriter Alignment_avg_rougthMovingAVG = new StreamWriter(SimpleData.PathOutputString + "\\Alignment\\Alignment_avg_rougth_MovingAVG.txt");
-
-            // --- вспомогательные массивы для определения сигмы шумов
-            // --- array_&_i - полный массив показаний датчиков;
-            // --- array_sigma_&_i - частичный массив показаний датчиков, не включающий в себя интервалы, где вместо показаний датчиков константа;
-            double[] array_f_1 = new double[200000];
-            double[] array_f_2 = new double[200000];
-            double[] array_f_3 = new double[200000];
-            double[] array_w_1 = new double[200000];
-            double[] array_w_2 = new double[200000];
-            double[] array_w_3 = new double[200000];
 
             // --- вектора СКО
             double[] sigma_f = new double[3];
@@ -76,6 +66,10 @@ namespace Alignment
 
             // --- длинна окна для скользящего среднего
             int MovingWindow = 500;
+            // --- вспомогательные массивы
+            double[] array_f_1 = new double[MovingWindow], array_f_2 = new double[MovingWindow], array_f_3 = new double[MovingWindow];
+            double[] array_w_1 = new double[MovingWindow], array_w_2 = new double[MovingWindow], array_w_3 = new double[MovingWindow];
+
             // --- Массив скользящих средних для датчиков
             double[] MovingAverageAccGyro = new double[6];
 
@@ -91,31 +85,42 @@ namespace Alignment
                 if ((ProcHelp.AlignmentCounts != 0 && i == ProcHelp.AlignmentCounts))
                     break;
 
-                array_f_1[k] = SINSstate.F_z[0];
-                array_f_2[k] = SINSstate.F_z[1];
-                array_f_3[k] = SINSstate.F_z[2];
-                array_w_1[k] = SINSstate.W_z[0];
-                array_w_2[k] = SINSstate.W_z[1];
-                array_w_3[k] = SINSstate.W_z[2];
+                int k_mode = k % MovingWindow;
+                array_f_1[k_mode] = SINSstate.F_z[0];
+                array_f_2[k_mode] = SINSstate.F_z[1];
+                array_f_3[k_mode] = SINSstate.F_z[2];
+                array_w_1[k_mode] = SINSstate.W_z[0];
+                array_w_2[k_mode] = SINSstate.W_z[1];
+                array_w_3[k_mode] = SINSstate.W_z[2];
 
                 // --- Вычисляем среднее значение показаний акселерометров. Цель - детектирование константы в показаниях ньютонометров
-                double array_sigma_f_1_tmp_sum = 0.0, array_sigma_w_1_tmp_sum = 0.0;
+                double tmp_f1_avg = 0.0, tmp_w1_avg = 0.0;
                 int u = 0;
                 for (u = 1; u <= Math.Min(i, 50); u++)
-                    array_sigma_f_1_tmp_sum += array_f_1[i - u];
-                array_sigma_f_1_tmp_sum /= (u - 1);
+                {
+                    if (k_mode - u < 0)
+                        tmp_f1_avg += array_f_1[MovingWindow + k_mode - u];
+                    else
+                        tmp_f1_avg += array_f_1[k_mode - u];
+                }
+                tmp_f1_avg /= (u - 1);
 
                 // --- Вычисляем среднее значение показаний ДУСов
                 u = 0;
                 for (u = 1; u <= Math.Min(i, 50); u++)
-                    array_sigma_w_1_tmp_sum += array_w_1[i - u];
-                array_sigma_w_1_tmp_sum /= (u - 1);
+                {
+                    if (k_mode - u < 0)
+                        tmp_w1_avg += array_w_1[MovingWindow + k_mode - u];
+                    else
+                        tmp_w1_avg += array_w_1[k_mode - u];
+                }
+                tmp_w1_avg /= (u - 1);
 
 
                 // --- Если показания датчиков меняются, то заполняем соответствующие массивы
                 if (SINSstate.NoiseParamDetermin_mode != 1 || SINSstate.NoiseParamDetermin_mode == 1 && SINSstate.i_global > SINSstate.NoiseParamDetermin_startTime && SINSstate.i_global < SINSstate.NoiseParamDetermin_endTime)
                 {
-                    if (Math.Abs(array_sigma_f_1_tmp_sum - array_f_1[i]) > 1E-9)
+                    if (Math.Abs(tmp_f1_avg - array_f_1[k_mode]) > 1E-9)
                     {
                         f_avg[0] += SINSstate.F_z[0];
                         f_avg[1] += SINSstate.F_z[1];
@@ -127,7 +132,7 @@ namespace Alignment
                     }
 
                     // --- Если показания датчиков меняются, то заполняем соответствующие массивы
-                    if (Math.Abs(array_sigma_w_1_tmp_sum - array_w_1[i]) > 1E-9)
+                    if (Math.Abs(tmp_w1_avg - array_w_1[k_mode]) > 1E-9)
                     {
                         w_avg[0] += SINSstate.W_z[0];
                         w_avg[1] += SINSstate.W_z[1];
@@ -158,17 +163,18 @@ namespace Alignment
                 k++;
 
                 // --- Вычисление скользящего среднего для его вывода в файл и только
-                for (int u1 = 1; u1 <= Math.Min(k, MovingWindow); u1++)
+                SimpleOperations.NullingOfArray(MovingAverageAccGyro);
+                for (int u1 = 1; u1 < Math.Min(k, MovingWindow); u1++)
                 {
-                    MovingAverageAccGyro[0] += array_f_1[k - u1];
-                    MovingAverageAccGyro[1] += array_f_2[k - u1];
-                    MovingAverageAccGyro[2] += array_f_3[k - u1];
-                    MovingAverageAccGyro[3] += array_w_1[k - u1];
-                    MovingAverageAccGyro[4] += array_w_2[k - u1];
-                    MovingAverageAccGyro[5] += array_w_3[k - u1];
+                    MovingAverageAccGyro[0] += array_f_1[u1];
+                    MovingAverageAccGyro[1] += array_f_2[u1];
+                    MovingAverageAccGyro[2] += array_f_3[u1];
+                    MovingAverageAccGyro[3] += array_w_1[u1];
+                    MovingAverageAccGyro[4] += array_w_2[u1];
+                    MovingAverageAccGyro[5] += array_w_3[u1];
                 }
                 for (int u1 = 0; u1 < 6; u1++)
-                    MovingAverageAccGyro[u1] = MovingAverageAccGyro[u1] / MovingWindow;
+                    MovingAverageAccGyro[u1] = MovingAverageAccGyro[u1] / (Math.Min(k, MovingWindow) - 1);
 
 
                 // --- Вычисляем текущее значение углов
