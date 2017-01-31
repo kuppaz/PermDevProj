@@ -75,7 +75,7 @@ namespace Common_Namespace
 
         //---параметры коррекции---
         public bool flag_UsingCorrection = false;
-        public bool flag_using_Checkpotints = false, first_N_meters_StartHeightCorrection_flag = false;
+        public bool flag_using_Checkpotints = false, flag_using_Sns = false, flag_notUseOdometer = false, first_N_meters_StartHeightCorrection_flag = false;
 
         //---остальное вспомогательное---
         public bool flag_UseLastMinusOneOdo = false, flag_slipping = false;

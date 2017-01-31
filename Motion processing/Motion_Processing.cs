@@ -209,6 +209,8 @@ namespace Motion_Processing
             SINSstate.value_iMx_kappa_3_ds = value_iMx_kappa_3_ds;
 
             SINSstate.flag_using_Checkpotints = this.flag_using_Checkpotints.Checked;
+            SINSstate.flag_using_Sns = this.flag_using_Sns.Checked;
+            SINSstate.flag_notUseOdometer = this.flag_notUseOdometer.Checked;
 
             SINSstate.flag_AutonomouseSolution = this.AutonomouseSolution.Checked;
             SINSstate.flag_noOdoModelEstimate = this.noOdoModelEstimate.Checked;

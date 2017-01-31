@@ -45,6 +45,8 @@
             this.AutonomouseSolution = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.noOdoModelEstimate = new System.Windows.Forms.CheckBox();
+            this.flag_using_Sns = new System.Windows.Forms.CheckBox();
+            this.flag_notUseOdometer = new System.Windows.Forms.CheckBox();
             this.groupBox10.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -82,7 +84,7 @@
             // flag_using_Checkpotints
             // 
             this.flag_using_Checkpotints.AutoSize = true;
-            this.flag_using_Checkpotints.Location = new System.Drawing.Point(15, 26);
+            this.flag_using_Checkpotints.Location = new System.Drawing.Point(15, 22);
             this.flag_using_Checkpotints.Name = "flag_using_Checkpotints";
             this.flag_using_Checkpotints.Size = new System.Drawing.Size(110, 17);
             this.flag_using_Checkpotints.TabIndex = 52;
@@ -91,10 +93,12 @@
             // 
             // groupBox10
             // 
+            this.groupBox10.Controls.Add(this.flag_notUseOdometer);
+            this.groupBox10.Controls.Add(this.flag_using_Sns);
             this.groupBox10.Controls.Add(this.flag_using_Checkpotints);
-            this.groupBox10.Location = new System.Drawing.Point(340, 37);
+            this.groupBox10.Location = new System.Drawing.Point(340, 22);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(140, 55);
+            this.groupBox10.Size = new System.Drawing.Size(140, 93);
             this.groupBox10.TabIndex = 39;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Correction Modes";
@@ -138,7 +142,7 @@
             // flag_GRTV_output
             // 
             this.flag_GRTV_output.AutoSize = true;
-            this.flag_GRTV_output.Location = new System.Drawing.Point(355, 146);
+            this.flag_GRTV_output.Location = new System.Drawing.Point(355, 156);
             this.flag_GRTV_output.Name = "flag_GRTV_output";
             this.flag_GRTV_output.Size = new System.Drawing.Size(106, 17);
             this.flag_GRTV_output.TabIndex = 83;
@@ -148,7 +152,7 @@
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.25F);
-            this.label2.Location = new System.Drawing.Point(346, 116);
+            this.label2.Location = new System.Drawing.Point(346, 126);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(132, 27);
             this.label2.TabIndex = 84;
@@ -218,6 +222,26 @@
             this.noOdoModelEstimate.Text = "Без модели ошибок одометра";
             this.noOdoModelEstimate.UseVisualStyleBackColor = true;
             // 
+            // flag_using_Sns
+            // 
+            this.flag_using_Sns.AutoSize = true;
+            this.flag_using_Sns.Location = new System.Drawing.Point(15, 43);
+            this.flag_using_Sns.Name = "flag_using_Sns";
+            this.flag_using_Sns.Size = new System.Drawing.Size(70, 17);
+            this.flag_using_Sns.TabIndex = 53;
+            this.flag_using_Sns.Text = "Use SNS";
+            this.flag_using_Sns.UseVisualStyleBackColor = true;
+            // 
+            // flag_notUseOdometer
+            // 
+            this.flag_notUseOdometer.AutoSize = true;
+            this.flag_notUseOdometer.Location = new System.Drawing.Point(15, 72);
+            this.flag_notUseOdometer.Name = "flag_notUseOdometer";
+            this.flag_notUseOdometer.Size = new System.Drawing.Size(114, 17);
+            this.flag_notUseOdometer.TabIndex = 54;
+            this.flag_notUseOdometer.Text = "Not Use Odometer";
+            this.flag_notUseOdometer.UseVisualStyleBackColor = true;
+            // 
             // SINS_Processing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,6 +291,8 @@
         private System.Windows.Forms.CheckBox AutonomouseSolution;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox noOdoModelEstimate;
+        private System.Windows.Forms.CheckBox flag_using_Sns;
+        private System.Windows.Forms.CheckBox flag_notUseOdometer;
     }
 }
 

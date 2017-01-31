@@ -128,6 +128,10 @@ namespace SINSProcessingModes
                 if (SINSstate.flag_using_Checkpotints)
                     CheckPointProcessing(SINSstate, SINSstate_OdoMod, KalmanVars);
 
+                // --- формируем показания по данным СНС, если установлена соответствующая опция
+                if (SINSstate.flag_using_Sns)
+                    SnsProcessing(SINSstate, SINSstate_OdoMod, KalmanVars);
+
                 // --- функция Make_H_CONTROLPOINTS с поданными НУЛЕВЫМИ значениями широты и долготы, формирует измерение по заданной (начальной) высоте
                 // --- если задан флаг коррекции по начальной высоте SINSstate.flag_first_N_meters_StartHeightCorrection.
                 // --- дополнительно прореживаю коррекцию i % 5 - раз в 5 тактов
@@ -212,21 +216,24 @@ namespace SINSProcessingModes
 
 
 
+        //--- ИЗМЕРЕНИЯ ПО СНС ДАННЫМ--- //
+        public static void SnsProcessing(SINS_State SINSstate, SINS_State SINSstate_OdoMod, Kalman_Vars KalmanVars)
+        {
+            SINSstate.flag_ControlPointCorrection = false;
 
+            // --- В качестве контрольных точем можно использовать СНС позиционную информация для коррекции БИНСового и одометрического счисления --- //
+            if (SINSstate.GPS_Data.gps_Latitude.isReady == 1 )
+            {
+                CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod
+                    , SINSstate.GPS_Data.gps_Latitude.Value, SINSstate.GPS_Data.gps_Longitude.Value, SINSstate.GPS_Data.gps_Altitude.Value, SINSstate.Noise_GPS_PositionError);
+            }
+        }
 
 
         //--- КОНТРОЛЬНЫЕ ТОЧКИ --- //
         public static void CheckPointProcessing(SINS_State SINSstate, SINS_State SINSstate_OdoMod, Kalman_Vars KalmanVars)
         {
             SINSstate.flag_ControlPointCorrection = false;
-
-            // --- В качестве контрольных точем можно использовать GPS позиционную информация для коррекции БИНСового и одометрического счисления --- //
-            if (SINSstate.GPS_Data.gps_Latitude.isReady == 1 && SINSstate.GPS_CounterOfPoints % 5 == 0)
-            {
-                //double[] PhiLambdaH_WGS84 = GeodesicVsGreenwich.Geodesic2Geodesic(SINSstate.GPS_Data.gps_Latitude.Value, SINSstate.GPS_Data.gps_Longitude.Value, SINSstate.GPS_Data.gps_Altitude.Value, 0);
-                //CorrectionModel.Make_H_CONTROLPOINTS(KalmanVars, SINSstate, SINSstate_OdoMod
-                //    , SINSstate.GPS_Data.gps_Latitude.Value, SINSstate.GPS_Data.gps_Longitude.Value, SINSstate.GPS_Data.gps_Altitude.Value, SINSstate.Noise_GPS_PositionError);
-            }
 
             if (SINSstate.DataInFileName == "630 отрезки  19.10.16_19-oct-2016.txt")
             {

@@ -64,6 +64,8 @@ namespace Common_Namespace
 
                 SINSstate.Time = (SINSstate.Count - SINSstate.initCount) * Math.Abs(SINSstate.timeStep);
 
+                SINSstate.Input_nMode = Convert.ToInt32(dataArray2[22]);
+
                 SINSstate.F_z[1] = Convert.ToDouble(dataArray2[1]);
                 SINSstate.F_z[2] = Convert.ToDouble(dataArray2[2]);
                 SINSstate.F_z[0] = Convert.ToDouble(dataArray2[3]);
@@ -126,13 +128,24 @@ namespace Common_Namespace
                 SINSstate.GPS_Data.gps_Altitude.Value = Convert.ToDouble(dataArray2[11]);
                 SINSstate.GPS_Data.gps_Altitude.isReady = Convert.ToInt32(dataArray2[12]);
 
-                if (SINSstate.GPS_Data.gps_Latitude.isReady == 1)
-                    SINSstate.GPS_CounterOfPoints++;
-
                 SINSstate.GPS_Data.gps_Vn.Value = Convert.ToDouble(dataArray2[13]);
                 SINSstate.GPS_Data.gps_Vn.isReady = Convert.ToInt32(dataArray2[14]);
                 SINSstate.GPS_Data.gps_Ve.Value = Convert.ToDouble(dataArray2[15]);
                 SINSstate.GPS_Data.gps_Ve.isReady = Convert.ToInt32(dataArray2[16]);
+
+
+                //--- Если режим не Движение, то игнорируем показания СНС ---
+                if (SINSstate.Input_nMode != 16)
+                {
+                    SINSstate.GPS_Data.gps_Latitude.isReady = 0;
+                    SINSstate.GPS_Data.gps_Longitude.isReady = 0;
+                    SINSstate.GPS_Data.gps_Altitude.isReady = 0;
+                    SINSstate.GPS_Data.gps_Vn.isReady = 0;
+                    SINSstate.GPS_Data.gps_Ve.isReady = 0;
+                }
+
+                if (SINSstate.GPS_Data.gps_Latitude.isReady == 1)
+                    SINSstate.GPS_CounterOfPoints++;
 
                 if (SINSstate.GPS_Data.gps_Latitude.isReady == 1)
                 {
@@ -140,18 +153,19 @@ namespace Common_Namespace
                     SINSstate.GPS_Data.gps_Ve.Value_prev = SINSstate.GPS_Data.gps_Ve.Value;
                 }
 
+
                 SINSstate.FLG_Stop = Convert.ToInt32(dataArray2[17]);
 
                 // --- Обрабатываем ситуацию, когда одометр установлен неправильно и не введен масштабный коэффициент
                 double Odo_SINS_VS_distance_coefficient = SINSstate.OdometerData.odometer_left.Value / SINSstate.distance_by_SINS;
-                if (SINSstate.distance_by_SINS < 110.0 && Math.Abs(Odo_SINS_VS_distance_coefficient) > 0.2)
+                if (SINSstate.distance_by_SINS < 110.0 && Math.Abs(Odo_SINS_VS_distance_coefficient) > 0.3)
                 {
                     if (SINSstate.distance_by_SINS > 5.0 && Odo_SINS_VS_distance_coefficient < 0)
                     {
                         SINSstate.OdometerData_Sign = -1;
                         SINSstate.OdometerLeftPrev *= SINSstate.OdometerData_Sign;
                     }
-                    if (SINSstate.distance_by_SINS > 100.0 && SINSstate.OdometerData_RoughtScale_flag == 0 && Math.Abs(1 - Odo_SINS_VS_distance_coefficient) > 0.3)
+                    if (SINSstate.distance_by_SINS > 100.0 && SINSstate.OdometerData_RoughtScale_flag == 0 && Math.Abs(1 - Odo_SINS_VS_distance_coefficient) > 0.5)
                     {
                         SINSstate.OdometerData_RoughtScale = Odo_SINS_VS_distance_coefficient;
                         SINSstate.OdometerLeftPrev /= SINSstate.OdometerData_RoughtScale;
@@ -172,8 +186,8 @@ namespace Common_Namespace
                 // --- ЗАГЛУШКА ---
 
 
-                SINSstate.Input_nMode = Convert.ToInt32(dataArray2[22]);
-
+                if (SINSstate.flag_notUseOdometer == true)
+                    SINSstate.OdometerData.odometer_left.isReady = 2;
 
                 if (SINSstate.OdometerData.odometer_left.isReady == 1)
                 {
