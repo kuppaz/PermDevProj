@@ -133,6 +133,18 @@ namespace Common_Namespace
                 SINSstate.GPS_Data.gps_Ve.Value = Convert.ToDouble(dataArray2[15]);
                 SINSstate.GPS_Data.gps_Ve.isReady = Convert.ToInt32(dataArray2[16]);
 
+                if (SINSstate.GPS_Data.gps_Latitude.isReady == 2)
+                    SINSstate.GPS_Data.gps_Latitude.isReady = 1;
+                if (SINSstate.GPS_Data.gps_Longitude.isReady == 2)
+                    SINSstate.GPS_Data.gps_Longitude.isReady = 1;
+                if (SINSstate.GPS_Data.gps_Altitude.isReady == 2)
+                    SINSstate.GPS_Data.gps_Altitude.isReady = 1;
+
+                if (SINSstate.GPS_Data.gps_Vn.isReady == 2)
+                    SINSstate.GPS_Data.gps_Vn.isReady = 1;
+                if (SINSstate.GPS_Data.gps_Ve.isReady == 2)
+                    SINSstate.GPS_Data.gps_Ve.isReady = 1;
+
 
                 //--- Если режим не Движение, то игнорируем показания СНС ---
                 if (SINSstate.Input_nMode != 16)
